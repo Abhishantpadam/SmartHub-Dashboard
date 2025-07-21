@@ -1,633 +1,69 @@
-@font-face {
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 700;
-    src: url(/Assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf);
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial, Helvetica, sans-serif;
 }
-
 
 body{
-    margin: 0%;
+    /* background: linear-gradient(223.94deg, rgb(250, 250, 250) 56.6%, #d9feb4 118.43%);
+    background: linear-gradient(270deg, #FFFFFF 65.6%, #ECFFA1 85.51%); */
+    background-color: #F1FFBB;
+}
+
+.main-container{
     width: 100%;
     height: 100vh;
-    display: flex;
-    flex-direction: row;
-    
 }
 
-.fullBody{
-    
-    position: absolute;
-    margin: 0%;
-    width:88%;
-    height:100vh;
-    top: 0px;
-    left:6%;
-    
-    background: linear-gradient(34.27deg, #FDFFF1 -1.43%, #E5E0FF 82.37%);
-    
-}
-
-.content{
-
-    position: absolute;
-    width: 63%;
-    height: 100%;
-    top: 0%;
-    left: 0%;
-
-}
-
-
-.tnhpanel{
-    position: absolute;
-    width: 30%;
-    height: 58%;
-    left: 4%;
-    top: 33%;
-}
-
-#livingRoom{
-    position: absolute;
-    width: 100%;
-    height: 15vh;
-    left: 0px;
-    top: 0px;
-    color: white;
-    border-radius: 0px;
-}
-
-#blackCard{
-    
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    top: 0px;
-    
-    background: #000000;
-    box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25);
-    border-radius: 17.1647px;
-}
-
-#backgroundCard1{
-    position: absolute;
-    width: 100%;
-    height: 15vh;
-    left: 0px;
-    top: 0px;
-
-    background: #FFFFFF;
-    box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25);
-    border-radius: 17.1647px;
-}
-
-#bedRoom{
-    position: absolute;
-    width: 100%;
-    height: 15vh;
-    left: 0px;
-    top: 37%;
-
-    border-radius: 0px;
-}
-
-#backgroundCard2{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    top: 0px;
-
-    background: #FFFFFF;
-    box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25);
-    border-radius: 17.1647px;
-}
-
-.whiteCard1{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    top: 0px;
-
-    background: #FFFFFF;
-    box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25);
-    border-radius: 17.1647px;
-}
-
-#commonRoom{
-    position: absolute;
-    width: 100%;
-    height: 15vh;
-    left: 0px;
-    bottom: 0px;
-
-}
-
-#whiteCard2{
-
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    bottom: 0px;
-    background: #FFFFFF;
-    box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25);
-    border-radius: 17.1647px;
-    
-}
-
-
-#backgroundCard3{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0px;
-    bottom: 0px;
-    background: #FFFFFF;
-    box-shadow: 0px 3.2px 3.2px rgba(0, 0, 0, 0.25);
-    border-radius: 17.1647px;
-}
-
-
-
-
-
-.side-panel{
-
-    height:100%;
-    width:37%;
-    top:0px;
-    left:63%;
-    position:absolute;
-    background: linear-gradient(163.1deg, #FFECEC 51.95%, #FFF1BD 124.68%);
-    mix-blend-mode: normal;
-
-}
-
-
-.otherTitle{
-    
-    color: #000000;
-    margin: 0px;
-    position: absolute;
-    top: 15%;
-    left: 12%;
-    font-family: Inter;
-    font-style: normal;
-    line-height: normal;
-
-}
-
-.title{
-    margin: 0px;
-    position: absolute;
-    top: 15%;
-    left: 12%;
-    font-family: Inter;
-    font-style: normal;
-    color: #ffffff;
-    line-height: normal;
-}
-
-.temperature{
-    margin: 0px;
-    position: absolute;
-    top: 63%;
-    left: 12%;
-    
-}
-
-.humidity{
-    margin: 0px;
-    position: absolute;
-    top: 65%;
-    left: 58%;
-}
-
-.title1{
-    margin: 0px;
-    font-weight: 700;
-    font-size: 80%;
-}
-
-.title2{
-    margin: 0px;
-    font-weight: 200;
-    font-size: 40%;
-}
-
-
-#map{
-
-    margin: 0px;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-
-}
-
-#roomMapDivBlock{
-    position: absolute;
-    width: 60%;
-    height: 68%;
-
-    top: 25%;
-    left: 37%;
-}
-
-.lineIcon{
-    margin: 0px;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-}
-
-
-#tempInfo{
-    margin: 0px;
-    position: absolute;
-    top: 60%;
-    left: 25%;
-
-    color: #ffffff;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
-    font-size: 100%;
-
-}
-
-.info1{
-    margin: 0px;
-    line-height: normal;
-    font-size: 45%;
-    font-weight: 200;
-
-}
-.info2{
-    margin: 0px;
-    line-height: normal;
-    font-size: 80%;
-    font-weight: 800;
-
-}.info3{
-    margin: 0px;
-    line-height: normal;
-    font-size: 20%;
-    font-weight: 200;
-    
-}
-
-#humidityInfo{
-    margin: 0px;
-    position: absolute;
-    top: 60%;
-    right: 10%;
-
-    color: #ffffff;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
-    font-size: 100%;
-    
-    text-align: right;
-}
-
-#humidityInfo2{
-    margin: 0px;
-    position: absolute;
-    top: 60%;
-    right: 10%;
-
-    color: #000000;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
-    font-size: 100%;
-    
-    text-align: right;
-}
-
-#tempInfo2{
-    margin: 0px;
-    position: absolute;
-    top: 60%;
-    left: 25%;
-
-    color: #000000;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
-    font-size: 100%;
-
-}
-
-
-#homeBar{
-   margin: 0px;
-   position: absolute;
-   top: 3%;
-   left: 4%;
-
-}
-
-#homeIcon{
-    margin: 0px;
-    position: absolute;
-    top: 18%;
-    left: 4%;
-}
-
-#locationIcon{
-    margin: 0px;
-    position: absolute;
-    top: 55%;
-    left: 30%;
-    width: 4%;
-}
-#homeTitle{
-    margin: 0px;
-    position: absolute;
-    top: 20%;
-    left: 30%;
-    font-size: 160%;
-
-}
-#homeAddress{
-    margin: 0px;
-    position: absolute;
-    top: 57%;
-    left: 35%;
-    font-size: 80%;
-}
-
-#buttons{
-    margin: 0px;
-
-    width: 100%;
-    height: 5%;
-    position: absolute;
-    top: 5%;
-    left: 5%;
-    right: 0%;
-    
-
-}
-
-#gearButton{
-    margin: 0px;
-    background: #FFFCF4;
-    border-radius: 50%;
-    padding: 0px;
-    height: 100%;
-    border: none;
-    width: 9%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-}
-
-
-#themeMode{
-    margin: 0px;
-    background: #FFFCF4;
-    border-radius: 24px;
-    padding: 0px;
-    position: absolute;
-    left: 20%;
-    top: 0px;
-    height: 100%;
+.sidebar-container{
     width: 20%;
-    border: none;
-
+    height: 100vh;
+    
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    
 }
 
-#controls{
-    margin: 0px;
-    position: absolute;
-    top: 15%;
-    left: 5%;
-    right: 5%;
-    width: 90%;
-    height: 80%;
+.navigation-options{
+    width: 100%;
+}
+
+.sidebar{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255);
+    border-radius: 0px 20px 20px 0px;
+    /* box-shadow: 2px 2px 4.9px rgba(0, 0, 0, 0.25); */
+    display: flex;
+    justify-content: flex-start;
+}
+
+.sidebar-container .sidebar ul{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-
-#txtArea h1,p{
-    margin: 0px;
-    color: #000000;
-    font-family: Inter;
-    font-style: normal;
-    line-height: normal;
-
-}
-#txtArea{
-    width: 40%;
-    position: relative;
-    top: 10%;
-    left: 7%;
-}
-#txtArea h1{
-    font-weight: 800;
-    font-size: 140%;
-}
-#txtArea p{
-    font-weight: 300;
-    font-size: 80%;
-}
-
-
-
-.controlBox{
-    margin: 0px;
     width: 100%;
-    height: 31%;
-    
-    background: linear-gradient(70.35deg, rgba(99, 242, 255, 0.2) 1.87%, rgba(255, 255, 255, 0.2) 48.96%), linear-gradient(236.17deg, #FFF6E0 29.94%, #FFFFFF 29.95%);
-    mix-blend-mode: normal;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 21px;
-
-}
-
-
-.devices{
-    margin: 0px;
-    width: 100%;
-    height: 100%;
-
-    position: relative;
-    top: 0px;
-    
-
-}
-
-.device1{
-    margin: 0px;
-    width: 40%;
-    height: 20%;
-
-    position: relative ;
-    
-    top: 20%;
-
-    left: 5%;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
+    margin-top: 40px;
     
 }
 
-.device2{
-    margin: 0px;
-    width: 40%;
-    height: 20%;
+.sidebar ul li{
+    list-style: none; /* This removes the dots */
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding-left: 25px;
 
-    position: relative ;
+}
+
+.sidebar ul li:hover{
+    background-color: #F1FFBB;
+}
+
+.sidebar ul li i{
+    font-size: 20px;
+    margin-right: 20px;
     
-    top: 30%;
-
-    left: 5%;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
-    
-}
-
-.device3{
-    margin: 0px;
-    width: 40%;
-    height: 20%;
-
-    position: relative ;
-    
-    top: -50%;
-
-    left: 55%;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
-    
-}
-
-.device4{
-    margin: 0px;
-    width: 40%;
-    height: 20%;
-
-    position: relative ;
-    
-    top: -40%;
-
-    left: 55%;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
-    
-}
-
-.device5{
-    margin: 0px;
-    width: 40%;
-    height: 20%;
-
-    position: relative ;
-    
-    top: -30%;
-
-    left: 55%;
-    background: #FFFFFF;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
-    
-}
-
-.deviceIcon{
-    width: 20%;
-    position: absolute;
-    top: 7%;
-    left: 6%;
-}
-
-
-.device1 h1{
-    margin: 0px;
-    position: absolute;
-    top: 25%;
-    left: 35%;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 100%;
-    color: #000000;
-}
-
-.device2 h1{
-    margin: 0px;
-    position: absolute;
-    top: 25%;
-    left: 35%;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 100%;
-    color: #000000;
-}
-.device3 h1{
-    margin: 0px;
-    position: absolute;
-    top: 25%;
-    left: 35%;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 100%;
-    color: #000000;
-}
-.device4 h1{
-    margin: 0px;
-    position: absolute;
-    top: 25%;
-    left: 35%;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 100%;
-    color: #000000;
-}
-.device5 h1{
-    margin: 0px;
-    position: absolute;
-    top: 25%;
-    left: 35%;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 100%;
-    color: #000000;
-}
-
-.controlBox .device1:active{
-    color: black;
-}
-
-.device1 button{
-    width: 100%;
-    height: 100%;
-
 }
 
