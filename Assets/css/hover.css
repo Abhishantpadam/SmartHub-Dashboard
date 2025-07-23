@@ -1,0 +1,52 @@
+.navigation-options > ul > li:hover{
+    background-color: #000000;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+
+}
+
+.navigation-options > ul > li:hover i{
+    font-size: 25px;
+    
+}
+
+/* ======== sidepanel logout button ========== */
+
+/* hover effect on button width */
+.logout .Btn:hover {
+  background-color: black;
+  width: 125px;
+  border-radius: 40px;
+  box-shadow: 2px 2px 4px rgba(128, 128, 128, 0.741);
+  transition-duration: 0.3s;
+}
+
+.logout .Btn:hover .sign {
+  width: 30%;
+  transition-duration: 0.3s;
+  padding-left: 10px;
+}
+
+.logout .Btn:hover .sign i{
+  color: white;
+  font-weight: 900;
+}
+
+/* hover effect button's text */
+.logout .Btn:hover .text {
+  opacity: 1;
+  width: 70%;
+  transition-duration: 0.3s;
+  padding-right: 10px;
+}
+/* button click effect*/
+.logout .Btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.members-images:hover{
+  scale: 1.2;
+  box-shadow: 0px 0px 12px 2px #ff0303;
+}
