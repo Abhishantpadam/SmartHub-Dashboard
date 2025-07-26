@@ -1,8 +1,9 @@
 .navigation-options > ul > li:hover{
-    background-color: #000000;
-    font-size: 20px;
-    color: white;
-    cursor: pointer;
+  background-color: #000000;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0px 0px 8px 4px rgb(184, 184, 184);
 
 }
 
@@ -48,5 +49,5 @@
 
 .members-images:hover{
   scale: 1.2;
-  box-shadow: 0px 0px 12px 2px #ff0303;
+  box-shadow: 0px 0px 12px 2px #ff243e;
 }
