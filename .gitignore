@@ -1,0 +1,7 @@
+# Ignore v2 folder
+v2/
+
+# OS generated files
+.DS_Store
+**/.DS_Store
+Thumbs.db
