@@ -1,0 +1,326 @@
+/* ==========================================================================
+   Design Tokens & Utility Templates (Vanilla CSS Design System)
+   ========================================================================== */
+
+:root {
+    /* Color Palette */
+    --color-bg: #fffbf7;
+    --color-surface: #ffffff;
+    --color-surface-secondary: #f5f5f7;
+    --color-border: #e5e5ea;
+    --color-border-subtle: rgba(0, 0, 0, 0.05);
+    --color-text-primary: #1d1d1f;
+    --color-text-secondary: #86868b;
+    --color-text-tertiary: #6e6e73;
+    
+    /* Semantic Colors */
+    --color-success: #16a34a;
+    --color-success-bg: rgba(34, 197, 94, 0.12);
+    --color-danger: #ef4444;
+    --color-danger-bg: rgba(239, 68, 68, 0.08);
+    --color-warning: #f59e0b;
+    --color-info: #0284c7;
+
+    /* Typography */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-cursive: 'Meow Script', cursive;
+
+    /* Tactile Pill Inset Shadow (Connected-to-Server Theme) */
+    --shadow-pill-tactile: -2px -2px 5px 0px inset rgba(0, 0, 0, 0.14),
+                           inset 2px 2px 4px 0px rgba(0, 0, 0, 0.05),
+                           0px 2px 6px rgba(0, 0, 0, 0.04);
+    --shadow-pill-tactile-hover: -2px -2px 5px 0px inset rgba(0, 0, 0, 0.18),
+                                 inset 2px 2px 4px 0px rgba(0, 0, 0, 0.07),
+                                 0px 4px 12px rgba(0, 0, 0, 0.07);
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
+    --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* Theme Presets */
+body.theme-apple {
+    --color-bg: #f5f5f7;
+    --color-surface: #ffffff;
+    --color-surface-secondary: #f0f0f2;
+}
+
+body.theme-warm {
+    --color-bg: #f6f6f6;
+    --color-surface: #ffffff;
+    --color-surface-secondary: #fdfaf4;
+}
+
+body.theme-midnight {
+    --color-bg: #0d0d0f;
+    --color-surface: #17171a;
+    --color-surface-secondary: #222226;
+    --color-border: #2c2c30;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #a1a1a6;
+    --color-text-tertiary: #8e8e93;
+}
+
+/* ==========================================================================
+   Reusable Utility / Template Classes
+   ========================================================================== */
+
+/* 1. Signature Pure-White Tactile Pill Capsule */
+.pill-capsule-tactile {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 9999px;
+    box-shadow: var(--shadow-pill-tactile);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pill-capsule-tactile:hover {
+    box-shadow: var(--shadow-pill-tactile-hover);
+    transform: translateY(-1px);
+}
+
+/* 2. Standard Capsule Button Presets */
+.btn-pill-primary {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    height: 34px;
+    padding: 0 0.95rem;
+    font-size: 0.825rem;
+    font-weight: 600;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-pill-primary:hover {
+    transform: scale(1.03);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-pill-secondary {
+    background: var(--color-surface-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    height: 38px;
+    padding: 0 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-pill-secondary:hover {
+    background: #e5e5ea;
+}
+
+.btn-pill-danger {
+    background: var(--color-danger-bg);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--color-danger);
+    border-radius: 9999px;
+    height: 34px;
+    padding: 0 0.95rem;
+    font-size: 0.775rem;
+    font-weight: 600;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-pill-danger:hover {
+    background: var(--color-danger);
+    color: #ffffff;
+    border-color: var(--color-danger);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+}
+
+/* 3. Base Frosted Card Frame */
+.console-card-frame {
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: 28px;
+    box-shadow: var(--shadow-card);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.console-card-frame:hover {
+    box-shadow: var(--shadow-card-hover);
+}
+
+/* 4. Smooth Inset Scrollbar Template */
+.custom-scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.custom-scroll-thin::-webkit-scrollbar {
+    width: 5px;
+}
+
+.custom-scroll-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.12);
+    border-radius: 9999px;
+}
+
+/* ==========================================================================
+   Shared Keyframe Animations
+   ========================================================================== */
+
+@keyframes neon-glow-pulse {
+    0% { transform: scale(0.85); opacity: 0.6; }
+    100% { transform: scale(1.25); opacity: 1; }
+}
+
+@keyframes subtle-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInView {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes settingsTabSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ==========================================================================
+   Apple & Stripe Style Toast Notification System
+   ========================================================================== */
+.toast-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    pointer-events: none;
+    max-width: 440px;
+}
+
+.toast-pill {
+    pointer-events: auto;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: #1d1d1f;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 0.75rem 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-size: 0.86rem;
+    font-weight: 500;
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.12),
+                0 2px 6px rgba(0, 0, 0, 0.04);
+    animation: toastSpringIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.2s ease;
+}
+
+.toast-pill:hover {
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
+}
+
+.toast-icon-wrap {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.toast-icon-wrap .toast-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.toast-pill.toast-danger .toast-icon-wrap {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.toast-pill.toast-warning .toast-icon-wrap {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.toast-pill.toast-info .toast-icon-wrap {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.toast-message {
+    flex: 1;
+    color: #1f2937;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+}
+
+.toast-close-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.2rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.toast-close-btn:hover {
+    color: #111827;
+    background: #f3f4f6;
+}
+
+.toast-pill.toast-fadeout {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+}
+
+@keyframes toastSpringIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

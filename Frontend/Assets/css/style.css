@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Home Dashboard - Master Stylesheet Bundle
+   Organized into modular domain-specific stylesheets & design tokens
+   ========================================================================== */
+
+/* 1. Design Tokens & Reusable Utility Templates (Pill Capsules, Buttons, Shadows) */
+@import url('tokens.css');
+
+/* 2. Base Document Reset, Body Wrapper & Sidebar Navigation */
+@import url('layout.css');
+
+/* 3. Header Section, Cursive Greeting, Server Status Pill & Room Selector */
+@import url('header.css');
+
+/* 4. Dashboard View: Master Console, 2x2 Device Grid, Weather & Telemetry */
+@import url('dashboard.css');
+
+/* 5. Settings View: Dedicated Device & Room Management Console */
+@import url('settings.css');
+
+/* 6. Dedicated Tab Stylesheets */
+@import url('automations.css');
+@import url('energy.css');
+@import url('logs.css');
+
+/* 7. Shared Views & Sub-view Placeholders */
+@import url('views.css');
+
+/* 8. Dialog Modals: Add Device & Add Room Popups */
+@import url('modals.css');
+
+/* 9. Centralized Responsive Breakpoints (Height & Width Adaptability) */
+@import url('media.css');

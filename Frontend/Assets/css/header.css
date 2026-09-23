@@ -1,0 +1,290 @@
+/* ==========================================================================
+   Header Section, Clean Inter Greeting & Room Selector Pill Bar
+   ========================================================================== */
+
+.dashboard-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 68px;
+    gap: 1.5rem;
+    flex-shrink: 0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    flex: 1;
+}
+
+.greeting-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.greeting-text {
+    font-family: var(--font-primary, 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    font-size: 2.15rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #1d1d1f);
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+}
+
+.greeting-text.page-title {
+    font-family: var(--font-primary, 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    font-size: 2.15rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary, #1d1d1f);
+    line-height: 1.15;
+}
+
+.greeting-subtext {
+    color: var(--color-text-secondary, #86868b);
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 0.15rem;
+}
+
+/* Menu Toggle Button (for responsive screens) */
+.menu-toggle-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: #ffffff;
+    border: 1px solid var(--color-border, #e5e5ea);
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--color-text-primary, #1d1d1f);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.menu-toggle-btn:hover {
+    background: var(--color-surface-secondary, #f5f5f7);
+}
+
+/* ==========================================================================
+   Center Room Selector Pill Bar
+   ========================================================================== */
+
+.header-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.room-pill-wrapper {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 420px;
+    width: auto;
+}
+
+.room-pill-bar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    background-color: #ffffff;
+    border-radius: 9999px;
+    height: 48px;
+    padding: 0.3rem 0.4rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+    max-width: 400px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
+    /* Needed for the sliding active indicator */
+    position: relative;
+    user-select: none;
+}
+
+.room-pill-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.room-pill {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    height: 38px;
+    padding: 0 1.25rem;
+    border-radius: 9999px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4b5563;
+    line-height: 1;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+    /* Position above the slider */
+    position: relative;
+    z-index: 1;
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.room-pill:not(.active):hover {
+    color: var(--color-text-primary, #1d1d1f);
+}
+
+/* Active pill: solid black by default for instant zero-flicker visibility */
+.room-pill.active {
+    color: #ffffff;
+    font-weight: 600;
+    background: #000000;
+}
+
+/* When the slider is measured and positioned (>0px), let slider handle background */
+.room-pill-bar.has-slider .room-pill.active {
+    background: transparent;
+}
+
+/* ==========================================================================
+   Room Pill Sliding Active Indicator
+   ========================================================================== */
+
+/* The sliding black background pill — absolutely positioned inside .room-pill-bar */
+.room-pill-slider {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 38px;
+    background: #000000;
+    border-radius: 9999px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    /* Animate both position and width smoothly */
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 0;
+    will-change: left, width;
+}
+
+
+/* ==========================================================================
+   Right Status Pill Container (Connected to Server)
+   ========================================================================== */
+
+.header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+}
+
+.status-pill-container {
+    position: relative;
+    display: inline-flex;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    height: 48px;
+    padding: 0 1.4rem;
+    box-shadow: -2px -2px 5px 0px inset rgba(0, 0, 0, 0.22), 
+                inset 2px 2px 4px 0px rgba(0, 0, 0, 0.06), 
+                0px 1px 2px rgba(255, 255, 255, 0.9);
+    color: #2d3139;
+    font-size: 0.925rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-pill:hover {
+    transform: translateY(-1px);
+    box-shadow: -2px -2px 5px 0px inset rgba(0, 0, 0, 0.15), 
+                inset 2px 2px 4px 0px rgba(0, 0, 0, 0.04), 
+                0px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.status-pill:active {
+    transform: translateY(0px) scale(0.98);
+}
+
+.status-dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    background-color: #34c759;
+    border-radius: 50%;
+    box-shadow: 0px 0px 6px rgba(52, 199, 89, 0.6);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.status-dot::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background-color: #34c759;
+    opacity: 0.35;
+    animation: status-glow-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes status-glow-pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.2;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0.45;
+    }
+}
+
+/* Offline / Disconnected State (Ruby Red) */
+.status-pill.is-offline {
+    color: #991b1b;
+    background-color: #fffbfb;
+}
+
+.status-pill.is-offline .status-dot {
+    background-color: #ff3b30;
+    box-shadow: 0px 0px 6px rgba(255, 59, 48, 0.6);
+}
+
+.status-pill.is-offline .status-dot::before {
+    background-color: #ff3b30;
+    animation: red-glow-pulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes red-glow-pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0.6;
+    }
+}

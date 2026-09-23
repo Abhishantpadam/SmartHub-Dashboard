@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Meow+Script&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="Assets/css/tokens.css">
+    <link rel="stylesheet" href="Assets/css/layout.css">
+    <link rel="stylesheet" href="Assets/css/header.css">
+    <link rel="stylesheet" href="Assets/css/dashboard.css">
+    <link rel="stylesheet" href="Assets/css/settings.css">
+    <link rel="stylesheet" href="Assets/css/automations.css">
+    <link rel="stylesheet" href="Assets/css/energy.css">
+    <link rel="stylesheet" href="Assets/css/logs.css">
+    <link rel="stylesheet" href="Assets/css/views.css">
+    <link rel="stylesheet" href="Assets/css/modals.css">
+    <link rel="stylesheet" href="Assets/css/hover.css">
+    <link rel="stylesheet" href="Assets/css/toggle.css">
+    <link rel="stylesheet" href="Assets/css/media.css">
+</head>
+
+<body>
+
+    <!-- Body Wrapper -->
+    <div class="body-wrapper">
+
+        <!-- 1. Navigation Menu -->
+        <aside class="navigation-menu" id="dashboard-sidebar" aria-label="Main Navigation">
+
+            <div class="sidebar-card">
+
+                <!-- Sidebar Header (Brand / Profile) -->
+                <header class="sidebar-brand">
+                    <div class="avatar-upload-wrapper" id="sidebar-avatar-wrapper" role="button" tabindex="0"
+                        title="Click to change profile photo">
+                        <img src="Assets/Images/kitty.png" alt="Profile avatar" class="brand-avatar"
+                            id="sidebar-avatar-img">
+                        <div class="avatar-hover-overlay">
+                            <span class="material-symbols-outlined">photo_camera</span>
+                        </div>
+                    </div>
+                    <div class="brand-info">
+                        <span class="brand-title">My Home</span>
+                        <span class="brand-status" id="sidebar-brand-status"><span class="brand-status-dot"
+                                id="sidebar-brand-status-dot"></span><span
+                                id="sidebar-brand-status-text">Online</span></span>
+                    </div>
+                </header>
+
+                <!-- Navigation Landmark (Primary Links) -->
+                <nav class="navigation-options" aria-label="Primary Navigation">
+                    <span>Navigation</span>
+                    <ul>
+                        <li class="active" data-view="dashboard"><i class="material-symbols-outlined">grid_view</i>
+                            <span>Dashboard</span></li>
+                        <li data-view="automations"><i class="material-symbols-outlined">schedule</i>
+                            <span>Automations</span></li>
+                        <li data-view="energy"><i class="material-symbols-outlined">bolt</i> <span>Energy</span></li>
+                        <li data-view="logs"><i class="material-symbols-outlined">receipt_long</i> <span>Activity
+                                Logs</span></li>
+                        <li data-view="settings"><i class="material-symbols-outlined">settings</i> <span>Settings</span>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Sidebar Footer (Actions & Signature) -->
+                <footer class="sidebar-footer">
+                    <div class="logout">
+                        <button class="Btn" aria-label="Logout">
+                            <div class="sign">
+                                <i class="material-symbols-outlined">logout</i>
+                            </div>
+                            <div class="text">Logout</div>
+                        </button>
+                    </div>
+                    <small>Made with 🥰</small>
+                </footer>
+
+            </div>
+
+        </aside>
+
+        <!-- 2. Dashboard View -->
+        <main class="dashboard-view">
+
+            <!-- Header Section -->
+            <header class="dashboard-header">
+
+                <!-- Greetings  -->
+                <div class="header-left">
+                    <button type="button" class="menu-toggle-btn" id="menu-toggle-btn"
+                        aria-label="Open Navigation Menu">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                    <div class="greeting-wrapper">
+                        <h1 class="greeting-text" id="header-greeting-title">Hi Abhi,</h1>
+                        <p class="greeting-subtext" id="header-greeting-subtitle">Welcome home &bull; <span
+                                id="active-devices-count">0</span> devices active</p>
+                    </div>
+                </div>
+
+                <!-- Room Selector Pill Bar in Header Center -->
+                <div class="header-center room-pill-wrapper" id="header-room-pill-wrapper">
+                    <nav class="room-pill-bar" id="room-pill-bar" role="tablist" aria-label="Select Room">
+                        <span class="room-pill-slider"></span>
+                        <button type="button" class="room-pill active" role="tab" aria-selected="true"
+                            data-room="bed">Bed</button>
+                        <button type="button" class="room-pill" role="tab" aria-selected="false"
+                            data-room="living">Living</button>
+                        <button type="button" class="room-pill" role="tab" aria-selected="false"
+                            data-room="common">Common</button>
+                        <button type="button" class="room-pill" role="tab" aria-selected="false"
+                            data-room="others">Others</button>
+                    </nav>
+                </div>
+
+                <!-- Connection status -->
+                <div class="header-right">
+                    <div class="status-pill-container">
+                        <div class="status-pill" id="status-pill" role="button" tabindex="0" aria-label="Broker Status"
+                            title="MQTT Broker Online • Click for full diagnostics">
+                            <span class="status-dot" aria-hidden="true"></span>
+                            <span class="status-label">Broker Online</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Master Smart Console Card -->
+            <section class="content-body" id="content-body">
+                <!-- View 1: Dashboard Primary Console -->
+                <div class="view-panel active" id="view-dashboard">
+                    <div class="master-console-card" id="master-console-card">
+
+                        <!-- Left Pane: Room Controls & 2x2 Device Grid -->
+                        <div class="console-pane console-left">
+                            <div class="tiles-header-bar">
+                                <span class="tiles-section-title">Devices</span>
+                            </div>
+                            <div class="tiles-scroll-wrapper" id="tiles-scroll-wrapper">
+                                <div class="tiles-device-grid" id="tiles-device-grid">
+                                    <!-- Dynamic Device Tiles Injected by main.js -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sleek Translucent Vertical Divider -->
+                        <div class="console-divider" aria-hidden="true"></div>
+
+                        <!-- Right Pane: Ambient Telemetry & Quick Actions -->
+                        <div class="console-pane console-right">
+
+                            <!-- 1. Live Weather Block -->
+                            <div class="ambient-block weather-block">
+                                <div class="weather-top-row">
+                                    <div class="date-group">
+                                        <span class="date-day" id="date-day">Monday</span>
+                                        <span class="date-full" id="date-full">Sep 7, 2026</span>
+                                    </div>
+                                    <div class="weather-badge-group">
+                                        <div class="weather-pill-badge">
+                                            <span
+                                                class="material-symbols-outlined weather-icon">partly_cloudy_day</span>
+                                            <span class="weather-temp">27°C</span>
+                                        </div>
+                                        <span class="weather-feels-like">Feels like 29°</span>
+                                    </div>
+                                </div>
+                                <div class="weather-bottom-row">
+                                    <span class="weather-condition">Partly Cloudy &bull; H: 30° L: 21°</span>
+                                    <span class="weather-location">Home City</span>
+                                </div>
+                                <!-- Atmospheric Micro-Metrics Strip -->
+                                <div class="weather-metrics-strip">
+                                    <div class="weather-submetric submetric-humidity">
+                                        <span
+                                            class="material-symbols-outlined submetric-icon">humidity_percentage</span>
+                                        <div class="submetric-text">
+                                            <span class="submetric-label">Humidity</span>
+                                            <span class="submetric-val">54%</span>
+                                        </div>
+                                    </div>
+                                    <div class="submetric-divider" aria-hidden="true"></div>
+                                    <div class="weather-submetric submetric-wind">
+                                        <span class="material-symbols-outlined submetric-icon">air</span>
+                                        <div class="submetric-text">
+                                            <span class="submetric-label">Wind</span>
+                                            <span class="submetric-val">14 km/h</span>
+                                        </div>
+                                    </div>
+                                    <div class="submetric-divider" aria-hidden="true"></div>
+                                    <div class="weather-submetric submetric-uv">
+                                        <span class="material-symbols-outlined submetric-icon">wb_sunny</span>
+                                        <div class="submetric-text">
+                                            <span class="submetric-label">UV Index</span>
+                                            <span class="submetric-val">3 Mod</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Hourly Micro Forecast Strip -->
+                                <div class="weather-hourly-strip" id="weather-hourly-strip">
+                                    <div class="hourly-item is-now">
+                                        <span class="hourly-time">Now</span>
+                                        <span class="material-symbols-outlined hourly-icon">partly_cloudy_day</span>
+                                        <span class="hourly-temp">27°</span>
+                                    </div>
+                                    <div class="hourly-item">
+                                        <span class="hourly-time">3 PM</span>
+                                        <span class="material-symbols-outlined hourly-icon">wb_sunny</span>
+                                        <span class="hourly-temp">29°</span>
+                                    </div>
+                                    <div class="hourly-item">
+                                        <span class="hourly-time">6 PM</span>
+                                        <span class="material-symbols-outlined hourly-icon">sunny_snowing</span>
+                                        <span class="hourly-temp">26°</span>
+                                    </div>
+                                    <div class="hourly-item">
+                                        <span class="hourly-time">9 PM</span>
+                                        <span class="material-symbols-outlined hourly-icon">bedtime</span>
+                                        <span class="hourly-temp">22°</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Room Environment & Sensor Telemetry Block -->
+                            <div class="ambient-block climate-block">
+                                <div class="ambient-block-header">
+                                    <div class="block-title-wrap">
+                                        <span class="material-symbols-outlined block-title-icon">thermostat</span>
+                                        <span class="block-title-text" id="climate-room-name">Bed Environment</span>
+                                    </div>
+                                    <span class="live-sensor-tag">Live Sensor</span>
+                                </div>
+                                <div class="climate-metrics-grid">
+
+                                    <!-- Metric 1: Temp -->
+                                    <div class="climate-metric-item">
+                                        <div class="metric-top">
+                                            <span class="metric-icon material-symbols-outlined">device_thermostat</span>
+                                            <span class="metric-label">Temperature</span>
+                                        </div>
+                                        <div class="metric-value-wrap">
+                                            <span class="metric-value" id="room-temp">23.5°</span>
+                                            <span class="metric-unit">C</span>
+                                        </div>
+                                        <span class="metric-status status-good" id="room-temp-status">Comfortable</span>
+                                    </div>
+
+                                    <!-- Metric 2: Humidity -->
+                                    <div class="climate-metric-item">
+                                        <div class="metric-top">
+                                            <span
+                                                class="metric-icon material-symbols-outlined">humidity_percentage</span>
+                                            <span class="metric-label">Humidity</span>
+                                        </div>
+                                        <div class="metric-value-wrap">
+                                            <span class="metric-value" id="room-humidity">46%</span>
+                                        </div>
+                                        <span class="metric-status status-good" id="room-hum-status">Optimal</span>
+                                    </div>
+
+                                    <!-- Metric 3: Air Quality -->
+                                    <div class="climate-metric-item">
+                                        <div class="metric-top">
+                                            <span class="metric-icon material-symbols-outlined">air</span>
+                                            <span class="metric-label">Air Quality</span>
+                                        </div>
+                                        <div class="metric-value-wrap">
+                                            <span class="metric-value" id="room-aqi">22</span>
+                                            <span class="metric-unit">AQI</span>
+                                        </div>
+                                        <span class="metric-status status-excellent"
+                                            id="room-aqi-status">Excellent</span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- 3. Room Quick Actions Block -->
+                            <div class="ambient-block actions-block">
+                                <div class="ambient-block-header">
+                                    <div class="block-title-wrap">
+                                        <span class="material-symbols-outlined block-title-icon">bolt</span>
+                                        <span class="block-title-text" id="actions-room-name">Bed Quick Actions</span>
+                                    </div>
+                                </div>
+                                <div class="actions-grid" id="quick-actions-grid">
+                                    <button type="button" class="action-pill" data-action="all-off">
+                                        <span class="material-symbols-outlined action-icon">power_settings_new</span>
+                                        <span class="action-text">All Off</span>
+                                    </button>
+                                    <button type="button" class="action-pill" data-action="all-on">
+                                        <span class="material-symbols-outlined action-icon">light_mode</span>
+                                        <span class="action-text">All On</span>
+                                    </button>
+                                    <button type="button" class="action-pill" data-action="eco">
+                                        <span class="material-symbols-outlined action-icon">eco</span>
+                                        <span class="action-text">Eco Mode</span>
+                                    </button>
+                                    <button type="button" class="action-pill" data-action="fan-timer">
+                                        <span class="material-symbols-outlined action-icon">timer</span>
+                                        <span class="action-text">Fan +1h</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- View 2: Settings / Manage Devices & Rooms -->
+                <div class="view-panel" id="view-settings">
+                    <div class="management-console-card settings-split-card">
+                        <!-- Left: Apple macOS–Style Settings Subnav -->
+                        <div class="settings-subnav-pane" id="settings-subnav-pane">
+                            <!-- Profile Chip -->
+                            <div class="settings-profile-card">
+                                <div class="profile-avatar-circle" id="settings-profile-avatar" role="button"
+                                    tabindex="0" title="Click to change profile photo">
+                                    <img src="Assets/Images/kitty.png" alt="Profile avatar" id="settings-avatar-img">
+                                    <div class="avatar-hover-overlay">
+                                        <span class="material-symbols-outlined">photo_camera</span>
+                                    </div>
+                                </div>
+                                <div class="profile-meta">
+                                    <span class="profile-name" id="settings-profile-name">Abhi</span>
+                                    <span class="profile-badge" id="settings-profile-role">Home Administrator</span>
+                                </div>
+                            </div>
+
+                            <!-- Navigation Categories -->
+                            <nav class="settings-nav-list" id="settings-nav-list" role="tablist"
+                                aria-label="Settings Categories">
+                                <span class="settings-nav-heading">Hardware</span>
+                                <button type="button" class="settings-nav-item active" data-tab="devices" role="tab"
+                                    aria-selected="true">
+                                    <span class="material-symbols-outlined nav-icon">devices</span>
+                                    <span class="nav-label">Devices</span>
+                                </button>
+                                <button type="button" class="settings-nav-item" data-tab="rooms" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">meeting_room</span>
+                                    <span class="nav-label">Rooms & Zones</span>
+                                </button>
+                                <button type="button" class="settings-nav-item" data-tab="quickactions" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">bolt</span>
+                                    <span class="nav-label">Quick Actions</span>
+                                </button>
+
+                                <span class="settings-nav-heading">Connectivity & IoT</span>
+                                <button type="button" class="settings-nav-item" data-tab="mqtt" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">cell_tower</span>
+                                    <span class="nav-label">MQTT Broker</span>
+                                </button>
+                                <button type="button" class="settings-nav-item" data-tab="pairing" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">sensors</span>
+                                    <span class="nav-label">Device Pairing</span>
+                                </button>
+
+                                <span class="settings-nav-heading">System & Data</span>
+                                <button type="button" class="settings-nav-item" data-tab="database" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">database</span>
+                                    <span class="nav-label">Database & Backup</span>
+                                </button>
+
+                                <span class="settings-nav-heading">Personalization</span>
+                                <button type="button" class="settings-nav-item" data-tab="theme" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">palette</span>
+                                    <span class="nav-label">Appearance & Theme</span>
+                                </button>
+                                <button type="button" class="settings-nav-item" data-tab="account" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">shield_person</span>
+                                    <span class="nav-label">Security & Account</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Sleek Translucent Divider -->
+                        <div class="console-divider" aria-hidden="true"></div>
+
+                        <!-- Right: Dynamic Detail Canvas for the Selected Category -->
+                        <div class="settings-detail-pane" id="settings-detail-pane">
+                            <!-- Dynamically Rendered by main.js based on active subnav tab -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View 3: Automations & Scenes Studio -->
+                <div class="view-panel" id="view-automations">
+                    <div class="automations-console-card">
+                        <div class="automations-header-bar">
+                            <div class="automations-header-left">
+                                <div class="pane-icon-badge">
+                                    <span class="material-symbols-outlined">schedule</span>
+                                </div>
+                                <div class="automations-title-wrap">
+                                    <h2>Automations & Routines</h2>
+                                    <p id="automations-count-text">4 smart routines configured</p>
+                                </div>
+                            </div>
+                            <div class="automations-header-actions">
+                                <button type="button" class="btn-manage-primary" id="open-add-routine-btn">
+                                    <span class="material-symbols-outlined">add</span>
+                                    <span>Add Routine</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="automations-scroll-container">
+                            <div class="automations-grid" id="automations-grid">
+                                <!-- Dynamic Routine Cards Injected by main.js -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View 4: Energy & Power Analytics -->
+                <div class="view-panel" id="view-energy">
+                    <div class="energy-console-card">
+                        <!-- Top KPI Row -->
+                        <div class="energy-kpi-row">
+                            <div class="energy-kpi-card">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Live Power Draw</span>
+                                    <div class="kpi-icon-badge"><span class="material-symbols-outlined">bolt</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-value-wrap">
+                                    <span class="kpi-value" id="energy-live-watts">0</span>
+                                    <span class="kpi-unit">W</span>
+                                </div>
+                                <span class="kpi-subtext" id="energy-active-subtext">Active load across home</span>
+                            </div>
+                            <div class="energy-kpi-card">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Today's Usage</span>
+                                    <div class="kpi-icon-badge"><span
+                                            class="material-symbols-outlined">electric_meter</span></div>
+                                </div>
+                                <div class="kpi-value-wrap">
+                                    <span class="kpi-value" id="energy-today-kwh">0.00</span>
+                                    <span class="kpi-unit">kWh</span>
+                                </div>
+                                <span class="kpi-subtext">Estimated today</span>
+                            </div>
+                            <div class="energy-kpi-card">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Est. Monthly Bill</span>
+                                    <div class="kpi-icon-badge"><span class="material-symbols-outlined">payments</span>
+                                    </div>
+                                </div>
+                                <div class="kpi-value-wrap">
+                                    <span class="kpi-unit" style="font-size: 1.4rem;">$</span>
+                                    <span class="kpi-value" id="energy-projected-cost">0.00</span>
+                                </div>
+                                <span class="kpi-subtext">At $0.14 / kWh</span>
+                            </div>
+                            <div class="energy-kpi-card">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Eco Index</span>
+                                    <div class="kpi-icon-badge"><span class="material-symbols-outlined">eco</span></div>
+                                </div>
+                                <div class="kpi-value-wrap">
+                                    <span class="kpi-value" id="energy-eco-rating" style="font-size: 1.5rem;">A+</span>
+                                </div>
+                                <span class="kpi-subtext" id="energy-eco-subtext">Optimal efficiency</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Content Split: Chart & Breakdown -->
+                        <div class="energy-content-grid">
+                            <!-- 24-Hour Graph -->
+                            <div class="energy-chart-card">
+                                <div class="chart-header-row">
+                                    <div class="chart-title-wrap">
+                                        <h3>Today's Hourly Consumption Curve</h3>
+                                        <p>Real-time telemetry and 24-hour wattage trend</p>
+                                    </div>
+                                    <span class="chart-badge-live">
+                                        <span class="live-pulse-dot"></span>
+                                        <span>Live Sync</span>
+                                    </span>
+                                </div>
+                                <div class="bar-chart-wrap" id="energy-bar-chart">
+                                    <!-- Dynamic Bars Injected by main.js -->
+                                </div>
+                            </div>
+
+                            <!-- Side Pane: Room Breakdown & Eco Tip -->
+                            <div class="energy-side-pane">
+                                <div class="breakdown-card">
+                                    <div class="breakdown-title">
+                                        <span>Room Energy Distribution</span>
+                                        <span class="material-symbols-outlined"
+                                            style="font-size: 18px; color: #86868b;">pie_chart</span>
+                                    </div>
+                                    <div class="room-bar-list" id="energy-room-bars">
+                                        <!-- Dynamic Room Bars Injected by main.js -->
+                                    </div>
+                                </div>
+                                <div class="eco-tip-capsule" id="energy-eco-tip">
+                                    <span class="material-symbols-outlined eco-tip-icon">tips_and_updates</span>
+                                    <div class="eco-tip-text">
+                                        <h4 id="eco-tip-title">Smart Eco Insight</h4>
+                                        <p id="eco-tip-desc">Turning off standby electronics when not in use can save up
+                                            to 15% on monthly electricity bills.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- View 5: Activity & System Intelligence Center -->
+                <div class="view-panel" id="view-logs">
+                    <div class="intel-hub-container">
+                        <!-- Navigation Segmented Control Bar -->
+                        <div class="intel-nav-header">
+                            <div class="intel-title-group">
+                                <div class="pane-icon-badge">
+                                    <span class="material-symbols-outlined">analytics</span>
+                                </div>
+                                <div class="intel-title-text">
+                                    <h2>Activity & System Intelligence</h2>
+                                    <p>Live wireless console, hardware telemetry, and security audit trail</p>
+                                </div>
+                            </div>
+                            <nav class="intel-subnav-bar" id="intel-subnav-bar" role="tablist" aria-label="Activity Intelligence Views">
+                                <button type="button" class="intel-nav-pill active" data-tab="console" role="tab" aria-selected="true">
+                                    <span class="material-symbols-outlined">terminal</span>
+                                    <span>Wireless Console</span>
+                                </button>
+                                <button type="button" class="intel-nav-pill" data-tab="timeline" role="tab" aria-selected="false">
+                                    <span class="material-symbols-outlined">history_toggle_off</span>
+                                    <span>Device Timeline</span>
+                                </button>
+                                <button type="button" class="intel-nav-pill" data-tab="security" role="tab" aria-selected="false">
+                                    <span class="material-symbols-outlined">shield_person</span>
+                                    <span>Security & Access</span>
+                                </button>
+                                <button type="button" class="intel-nav-pill" data-tab="automations" role="tab" aria-selected="false">
+                                    <span class="material-symbols-outlined">smart_toy</span>
+                                    <span>Automations</span>
+                                </button>
+                                <button type="button" class="intel-nav-pill" data-tab="telemetry" role="tab" aria-selected="false">
+                                    <span class="material-symbols-outlined">vital_signs</span>
+                                    <span>Node Telemetry</span>
+                                </button>
+                            </nav>
+                        </div>
+
+                        <!-- Tab 1: Live Wireless MQTT Console (Terminal) -->
+                        <div class="intel-tab-pane active" id="intel-pane-console">
+                            <div class="terminal-card">
+                                <div class="terminal-toolbar">
+                                    <div class="terminal-status-left">
+                                        <div class="terminal-mac-badge" id="terminal-node-badge">
+                                            <span class="dot live-pulse"></span>
+                                            <strong id="terminal-active-node-name">esp32-0e40</strong>
+                                            <span class="sub" id="terminal-active-node-ip">• Ready</span>
+                                        </div>
+                                        <div class="terminal-filter-pills" id="terminal-filter-pills">
+                                            <button type="button" class="term-filter-btn active" data-filter="all">All</button>
+                                            <button type="button" class="term-filter-btn" data-filter="firmware">ESP32 Logs</button>
+                                            <button type="button" class="term-filter-btn" data-filter="mqtt">MQTT Traffic</button>
+                                            <button type="button" class="term-filter-btn" data-filter="error">Errors</button>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-actions-right">
+                                        <button type="button" class="term-btn" id="term-autoscroll-btn" title="Toggle Auto-Scroll">
+                                            <span class="material-symbols-outlined">vertical_align_bottom</span>
+                                            <span>Auto-Scroll</span>
+                                        </button>
+                                        <button type="button" class="term-btn" id="term-pause-btn" title="Pause Stream">
+                                            <span class="material-symbols-outlined">pause</span>
+                                            <span>Pause</span>
+                                        </button>
+                                        <button type="button" class="term-btn" id="term-copy-btn" title="Copy Console Logs">
+                                            <span class="material-symbols-outlined">content_copy</span>
+                                            <span>Copy</span>
+                                        </button>
+                                        <button type="button" class="term-btn danger" id="term-clear-btn" title="Clear Console">
+                                            <span class="material-symbols-outlined">delete_sweep</span>
+                                            <span>Clear</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Monospace CLI Terminal Stream -->
+                                <div class="terminal-screen" id="terminal-screen">
+                                    <div class="terminal-output" id="terminal-output">
+                                        <!-- Injected dynamically via main.js -->
+                                    </div>
+                                </div>
+
+                                <!-- Interactive MQTT Test Command Dispatcher -->
+                                <div class="terminal-command-bar">
+                                    <span class="term-prompt">smarthub &gt;</span>
+                                    <input type="text" class="term-cmd-input" id="term-cmd-input" placeholder="Type command or MQTT payload (e.g. identify, {&quot;on&quot;:true}, ping)...">
+                                    <button type="button" class="term-send-btn" id="term-send-btn">
+                                        <span>Send to ESP32</span>
+                                        <span class="material-symbols-outlined">send</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Device & Appliance Timeline -->
+                        <div class="intel-tab-pane" id="intel-pane-timeline">
+                            <div class="timeline-card">
+                                <div class="timeline-filter-bar">
+                                    <div class="timeline-filter-group" id="timeline-filter-group">
+                                        <button type="button" class="timeline-pill active" data-filter="all">All Devices</button>
+                                        <button type="button" class="timeline-pill" data-filter="light">💡 Lights</button>
+                                        <button type="button" class="timeline-pill" data-filter="fan">🌀 Fans</button>
+                                        <button type="button" class="timeline-pill" data-filter="socket">🔌 Sockets</button>
+                                        <button type="button" class="timeline-pill" data-filter="ac">❄️ Climate</button>
+                                    </div>
+                                    <button type="button" class="btn-clear-logs" id="clear-activity-btn">
+                                        <span class="material-symbols-outlined">delete_sweep</span>
+                                        <span>Clear Timeline</span>
+                                    </button>
+                                </div>
+                                <div class="timeline-stream-wrap">
+                                    <div class="timeline-stream-list" id="timeline-stream-list">
+                                        <!-- Injected dynamically via main.js -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Security & Access Log -->
+                        <div class="intel-tab-pane" id="intel-pane-security">
+                            <div class="security-grid">
+                                <div class="security-active-card">
+                                    <div class="sec-card-header">
+                                        <span class="material-symbols-outlined sec-icon">verified_user</span>
+                                        <div>
+                                            <h3>Active Authenticated Session</h3>
+                                            <p id="sec-session-user">Abhishant • Home Administrator</p>
+                                        </div>
+                                    </div>
+                                    <div class="sec-meta-list">
+                                        <div class="sec-meta-item">
+                                            <span class="label">IP Address</span>
+                                            <strong id="sec-session-ip">127.0.0.1 (Local Mesh)</strong>
+                                        </div>
+                                        <div class="sec-meta-item">
+                                            <span class="label">Encryption</span>
+                                            <strong id="sec-session-tls">TLS v1.3 • AES-256-GCM</strong>
+                                        </div>
+                                        <div class="sec-meta-item">
+                                            <span class="label">Broker Authorization</span>
+                                            <strong id="sec-session-auth">Muffin (HiveMQ Cloud Cluster)</strong>
+                                        </div>
+                                        <div class="sec-meta-item">
+                                            <span class="label">Session Status</span>
+                                            <strong class="badge-active">Active • Zero Breaches</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="security-audit-card">
+                                    <div class="sec-card-header">
+                                        <span class="material-symbols-outlined sec-icon">receipt_long</span>
+                                        <div>
+                                            <h3>Security & Access Audit Trail</h3>
+                                            <p>Logins, hardware pairing events, and token verifications</p>
+                                        </div>
+                                    </div>
+                                    <div class="sec-audit-list" id="security-audit-list">
+                                        <!-- Injected dynamically via main.js -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 4: Automations & Scene History -->
+                        <div class="intel-tab-pane" id="intel-pane-automations">
+                            <div class="automations-history-card">
+                                <div class="auto-hist-header">
+                                    <span class="material-symbols-outlined">schedule</span>
+                                    <div>
+                                        <h3>Routine & Scene Execution History</h3>
+                                        <p>Audit trail of scheduled routines, motion events, and automated scenes</p>
+                                    </div>
+                                </div>
+                                <div class="auto-hist-list" id="automations-history-list">
+                                    <!-- Injected dynamically via main.js -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab 5: Node Telemetry & Hardware Health -->
+                        <div class="intel-tab-pane" id="intel-pane-telemetry">
+                            <div class="telemetry-grid" id="telemetry-nodes-grid">
+                                <!-- Injected dynamically via main.js -->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+    </div>
+
+    <!-- Add Device Modal Dialog -->
+    <dialog class="device-modal" id="device-modal" aria-labelledby="modal-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Device</h3>
+                <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close dialog">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="add-device-form" class="modal-form">
+                <input type="hidden" id="device-edit-id" value="">
+                <div class="form-group">
+                    <label for="device-name-input">Device Name</label>
+                    <input type="text" id="device-name-input" placeholder="e.g. Desk Lamp, AC, TV" required
+                        autocomplete="off">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="device-type-select">Device Type</label>
+                        <select id="device-type-select">
+                            <option value="light">Light</option>
+                            <option value="fan">Fan</option>
+                            <option value="socket">Socket</option>
+                            <option value="tv">Television</option>
+                            <option value="ac">Air Conditioner</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="device-room-select">Room</label>
+                        <select id="device-room-select">
+                            <option value="bed">Bed</option>
+                            <option value="living">Living</option>
+                            <option value="common">Common</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-cancel-btn" id="modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="modal-submit-btn">Add to Dashboard</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Add Room Modal Dialog -->
+    <dialog class="device-modal" id="room-modal" aria-labelledby="room-modal-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="room-modal-title">Add New Room</h3>
+                <button type="button" class="modal-close-btn" id="room-modal-close-btn" aria-label="Close dialog">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="add-room-form" class="modal-form">
+                <div class="form-group">
+                    <label for="room-name-input">Room Name</label>
+                    <input type="text" id="room-name-input" placeholder="e.g. Kitchen, Balcony, Studio, Office" required
+                        autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="room-icon-select">Room Icon</label>
+                    <select id="room-icon-select">
+                        <option value="meeting_room">Standard Room</option>
+                        <option value="bed">Bedroom</option>
+                        <option value="chair">Living Room</option>
+                        <option value="countertops">Kitchen</option>
+                        <option value="desk">Study / Work</option>
+                        <option value="balcony">Balcony / Outdoor</option>
+                        <option value="bathroom">Bathroom</option>
+                        <option value="garage">Garage</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-cancel-btn" id="room-modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="modal-submit-btn">Create Room</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Add Routine Modal Dialog -->
+    <dialog class="device-modal" id="routine-modal" aria-labelledby="routine-modal-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="routine-modal-title">Create Smart Routine</h3>
+                <button type="button" class="modal-close-btn" id="routine-modal-close-btn" aria-label="Close dialog">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="add-routine-form" class="modal-form">
+                <div class="form-group">
+                    <label for="routine-name-input">Routine Name</label>
+                    <input type="text" id="routine-name-input" placeholder="e.g. Evening Wind Down, Focus Mode" required
+                        autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="routine-desc-input">Description</label>
+                    <input type="text" id="routine-desc-input" placeholder="Briefly describe what this routine triggers"
+                        required autocomplete="off">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="routine-time-input">Trigger Time</label>
+                        <input type="text" id="routine-time-input" placeholder="e.g. 08:00 PM or Manual" required
+                            value="08:00 PM">
+                    </div>
+                    <div class="form-group">
+                        <label for="routine-target-select">Target Room</label>
+                        <select id="routine-target-select">
+                            <option value="all">All Rooms</option>
+                            <option value="bed">Bed</option>
+                            <option value="living">Living</option>
+                            <option value="common">Common</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="routine-action-select">Action Preset</label>
+                        <select id="routine-action-select">
+                            <option value="all_on">Turn On All Devices</option>
+                            <option value="all_off">Turn Off All Devices</option>
+                            <option value="eco">Eco Efficiency Mode</option>
+                            <option value="movie_preset">Movie / Ambient Scene</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="routine-icon-select">Icon</label>
+                        <select id="routine-icon-select">
+                            <option value="schedule">Schedule</option>
+                            <option value="wb_sunny">Morning Sun</option>
+                            <option value="bedtime">Night Moon</option>
+                            <option value="movie">Movie</option>
+                            <option value="eco">Eco Leaf</option>
+                            <option value="bolt">Bolt Energy</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="modal-cancel-btn" id="routine-modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="modal-submit-btn">Save Routine</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Create / Edit Quick Action Modal Dialog (Full Device Permutations & Combinations) -->
+    <dialog class="device-modal" id="quick-action-modal" aria-labelledby="qa-modal-title">
+        <div class="modal-card qa-modal-card">
+            <div class="modal-header">
+                <div class="modal-header-titles">
+                    <h3 id="qa-modal-title">Create Quick Action</h3>
+                    <p class="modal-subtitle">Configure exact triggers across any combination of your devices</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="qa-modal-close-btn" aria-label="Close dialog">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form id="qa-modal-form" class="modal-form">
+                <input type="hidden" id="qa-id-input">
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 2;">
+                        <label for="qa-name-input">Action Name</label>
+                        <input type="text" id="qa-name-input" placeholder="e.g. Focus Chill, Party Time, Sleep Tight"
+                            required autocomplete="off">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="qa-icon-select">Icon</label>
+                        <select id="qa-icon-select">
+                            <option value="bolt">⚡ Bolt</option>
+                            <option value="power_settings_new">⏻ Power Off</option>
+                            <option value="light_mode">☀️ Sun / Light</option>
+                            <option value="dark_mode">🌙 Moon / Dark</option>
+                            <option value="eco">🍃 Eco Leaf</option>
+                            <option value="timer">⏱️ Timer</option>
+                            <option value="movie">🎬 Cinema / Movie</option>
+                            <option value="bedtime">🛌 Bedtime Cozy</option>
+                            <option value="celebration">🎉 Celebration</option>
+                            <option value="local_cafe">☕ Coffee / Relax</option>
+                            <option value="tv">📺 TV Media</option>
+                            <option value="ac_unit">❄️ Climate</option>
+                            <option value="wb_sunny">🌅 Morning Glow</option>
+                            <option value="lock">🔒 Lock Safe</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="qa-desc-input">Description / Subtitle</label>
+                    <input type="text" id="qa-desc-input" placeholder="e.g. Dims lights to 20%, turns on fan to speed 2"
+                        autocomplete="off">
+                </div>
+
+                <!-- Trigger Behavior & Device Combination Matrix -->
+                <div class="qa-behavior-builder-section">
+                    <div class="qa-builder-header">
+                        <div class="qa-builder-titles">
+                            <span class="qa-builder-title">Device Permutations & Settings</span>
+                            <span class="qa-builder-subtitle">Choose exact states and settings for any device</span>
+                        </div>
+                        <div class="qa-preset-tools">
+                            <select id="qa-preset-select" class="qa-preset-dropdown" title="Pre-fill with template">
+                                <option value="">⚡ Quick Template...</option>
+                                <option value="all-off">All Devices Off</option>
+                                <option value="all-on">All Devices On</option>
+                                <option value="eco">Eco Mode (Low Draw)</option>
+                                <option value="movie-night">Movie Night (TV On, Lights Off)</option>
+                                <option value="bedtime">Bedtime (Fan On, Rest Off)</option>
+                                <option value="clear">Clear (Ignore All)</option>
+                            </select>
+                            <div class="qa-quick-btns">
+                                <button type="button" class="btn-qa-batch" id="btn-batch-all-on" title="Turn all ON">All
+                                    On</button>
+                                <button type="button" class="btn-qa-batch" id="btn-batch-all-off"
+                                    title="Turn all OFF">All Off</button>
+                                <button type="button" class="btn-qa-batch" id="btn-batch-clear"
+                                    title="Reset all to Ignore">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scrollable dynamic device list -->
+                    <div class="qa-devices-scroll-list" id="qa-device-matrix">
+                        <!-- Populated dynamically via quick-actions.js -->
+                    </div>
+
+                    <!-- Dynamic Live Rule Preview Summary -->
+                    <div class="qa-rule-preview-banner" id="qa-rule-preview">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="preview-text" id="qa-preview-text">No device changes configured (All devices will
+                            stay as-is).</span>
+                    </div>
+                </div>
+
+                <div class="form-group qa-dashboard-toggle-row">
+                    <label for="qa-active-chk">Show shortcut on Primary Dashboard</label>
+                    <label class="normal-switch" title="Show on Dashboard">
+                        <input type="checkbox" id="qa-active-chk" checked>
+                        <span class="normal-slider"></span>
+                    </label>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="modal-cancel-btn" id="qa-modal-cancel-btn">Cancel</button>
+                    <button type="submit" class="modal-submit-btn" id="qa-modal-submit-btn">Save Action</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Interactive Device Detail & Secondary Controls Modal (Dashboard Tile Tap) -->
+    <dialog class="device-modal" id="device-detail-modal" aria-labelledby="detail-device-name">
+        <div class="modal-card detail-modal-card">
+            <div class="modal-header">
+                <div class="detail-header-left">
+                    <div class="detail-device-avatar" id="detail-device-avatar">
+                        <span class="material-symbols-outlined" id="detail-device-icon">lightbulb</span>
+                    </div>
+                    <div class="modal-header-titles">
+                        <div class="detail-title-row">
+                            <h3 id="detail-device-name">Device Name</h3>
+                            <span class="detail-room-badge" id="detail-device-room">Bedroom</span>
+                        </div>
+                        <span class="detail-status-subtext" id="detail-status-subtext">Online • 42W</span>
+                    </div>
+                </div>
+                <div class="detail-header-actions">
+                    <label class="normal-switch" title="Master Power">
+                        <input type="checkbox" id="detail-master-toggle">
+                        <span class="normal-slider"></span>
+                    </label>
+                    <button type="button" class="modal-close-btn" id="detail-modal-close-btn" aria-label="Close dialog">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Controls Body (Light Brightness, Fan Speed, or AC Temperature) -->
+            <div class="detail-controls-body" id="detail-controls-body">
+                <!-- Populated dynamically via main.js -->
+            </div>
+
+            <!-- Secondary Hardware & Energy Telemetry Badges -->
+            <div class="detail-telemetry-strip" id="detail-telemetry-strip">
+                <div class="telemetry-badge">
+                    <span class="material-symbols-outlined badge-icon">bolt</span>
+                    <span class="badge-label">Power Draw:</span>
+                    <strong id="detail-power-display">42W</strong>
+                </div>
+                <div class="telemetry-badge">
+                    <span class="material-symbols-outlined badge-icon">verified</span>
+                    <span class="badge-label">State:</span>
+                    <strong id="detail-state-display">Active</strong>
+                </div>
+                <div class="telemetry-badge">
+                    <span class="material-symbols-outlined badge-icon">router</span>
+                    <span class="badge-label">Protocol:</span>
+                    <strong>Zigbee / Matter</strong>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="margin-top: 0.25rem;">
+                <button type="button" class="modal-submit-btn" id="detail-modal-done-btn"
+                    style="width: 100%;">Done</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Live MQTT & Room Network Topology Diagnostics Modal -->
+    <dialog class="device-modal diagnostics-modal" id="network-diagnostics-modal" aria-labelledby="diag-modal-title">
+        <div class="modal-card diag-modal-card">
+            <div class="modal-header diag-modal-header">
+                <div class="diag-header-left">
+                    <div class="diag-status-avatar" id="diag-status-avatar">
+                        <span class="material-symbols-outlined" id="diag-status-icon">cell_tower</span>
+                    </div>
+                    <div class="modal-header-titles">
+                        <div class="diag-title-row">
+                            <h3 id="diag-modal-title">MQTT & Hardware Topology</h3>
+                            <span class="diag-status-pill is-online" id="diag-broker-status-badge">
+                                <span class="diag-dot"></span> Connected
+                            </span>
+                        </div>
+                        <span class="diag-status-subtext" id="diag-broker-endpoint">HiveMQ Cloud • mqtts://...</span>
+                    </div>
+                </div>
+                <div class="detail-header-actions">
+                    <button type="button" class="modal-close-btn" id="diag-modal-close-btn" aria-label="Close dialog">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="diag-modal-body" id="diag-modal-body">
+                <!-- 1. Broker & Telemetry Stats Bar -->
+                <div class="diag-meta-grid" id="diag-meta-grid">
+                    <div class="diag-meta-card">
+                        <span class="diag-meta-label">Protocol & Port</span>
+                        <strong class="diag-meta-val" id="diag-val-protocol">mqtts://8883</strong>
+                    </div>
+                    <div class="diag-meta-card">
+                        <span class="diag-meta-label">Client Identifier</span>
+                        <strong class="diag-meta-val" id="diag-val-client-id">home-dashboard</strong>
+                    </div>
+                    <div class="diag-meta-card">
+                        <span class="diag-meta-label">Base Topic</span>
+                        <strong class="diag-meta-val" id="diag-val-base-topic">smarthub</strong>
+                    </div>
+                    <div class="diag-meta-card">
+                        <span class="diag-meta-label">Active / Total</span>
+                        <strong class="diag-meta-val" id="diag-val-devices-count">3 / 7</strong>
+                    </div>
+                </div>
+
+                <!-- 2. Subscribed Topics Strip -->
+                <div class="diag-section-box">
+                    <div class="diag-section-title-row">
+                        <span class="material-symbols-outlined section-icon">alt_route</span>
+                        <h4>Active Topic Subscriptions</h4>
+                    </div>
+                    <div class="diag-topics-list" id="diag-topics-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- 3. Room-by-Room ESP32 Hardware Node Topology Tree -->
+                <div class="diag-section-box">
+                    <div class="diag-section-title-row">
+                        <span class="material-symbols-outlined section-icon">hub</span>
+                        <h4>Connected Room Controllers (ESP32 Nodes)</h4>
+                    </div>
+                    <div class="diag-nodes-container" id="diag-nodes-container">
+                        <!-- Injected dynamically via renderDiagnosticsModal() -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer diag-modal-footer">
+                <button type="button" class="diag-btn-secondary" id="diag-refresh-btn">
+                    <span class="material-symbols-outlined">refresh</span> Refresh Telemetry
+                </button>
+                <button type="button" class="modal-submit-btn" id="diag-modal-done-btn">Done</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- ESP32 Auto-Discovery & Dynamic Channel Pairing Wizard Modal -->
+    <dialog class="device-modal pairing-modal" id="pairing-config-modal" aria-labelledby="pair-modal-title">
+        <div class="modal-card pairing-modal-card">
+            <div class="modal-header">
+                <div class="diag-header-left">
+                    <div class="diag-status-avatar" style="background: rgba(0, 113, 227, 0.1); color: #0071e3;">
+                        <span class="material-symbols-outlined">hub</span>
+                    </div>
+                    <div class="modal-header-titles">
+                        <h3 id="pair-modal-title">Pair ESP32 Controller</h3>
+                        <p class="modal-subtitle" id="pair-modal-subtitle">Assign controller to a room and map relay channels to devices</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-close-btn" id="pair-modal-close-btn" aria-label="Close dialog">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="pairing-wizard-form" class="modal-form pairing-wizard-body">
+                <!-- 1. Node Hardware Telemetry Pill -->
+                <div class="pairing-node-summary" id="pairing-node-summary">
+                    <div class="node-summary-item">
+                        <span class="node-summary-label">Node Identifier</span>
+                        <strong class="node-summary-val" id="pair-node-id">esp32-node</strong>
+                    </div>
+                    <div class="node-summary-item">
+                        <span class="node-summary-label">MAC Address</span>
+                        <strong class="node-summary-val" id="pair-node-mac">24:6F:28:XX:XX:XX</strong>
+                    </div>
+                    <div class="node-summary-item">
+                        <span class="node-summary-label">IP Address</span>
+                        <strong class="node-summary-val" id="pair-node-ip">192.168.1.x</strong>
+                    </div>
+                    <div class="node-summary-item">
+                        <span class="node-summary-label">Signal (RSSI)</span>
+                        <strong class="node-summary-val" id="pair-node-rssi">-52 dBm</strong>
+                    </div>
+                </div>
+
+                <!-- 2. Room Assignment -->
+                <div class="modal-section-group">
+                    <label class="modal-section-label" for="pair-room-select">Room Location</label>
+                    <div class="pair-room-select-wrap">
+                        <select id="pair-room-select" class="modal-select" required>
+                            <!-- Injected dynamically with rooms + "+ Create New Room" -->
+                        </select>
+                    </div>
+
+                    <!-- Inline New Room Creator (Shown when '+ Create New Room' is selected) -->
+                    <div id="pair-new-room-fields" class="pair-new-room-box" style="display: none;">
+                        <div class="modal-field">
+                            <label for="pair-new-room-name" class="modal-label">New Room Name</label>
+                            <input type="text" id="pair-new-room-name" class="modal-input" placeholder="e.g. Kitchen, Balcony, Office">
+                        </div>
+                        <div class="modal-field">
+                            <label for="pair-new-room-icon" class="modal-label">Room Icon</label>
+                            <select id="pair-new-room-icon" class="modal-select">
+                                <option value="kitchen">🍳 Kitchen</option>
+                                <option value="balcony">🌿 Balcony</option>
+                                <option value="dining">🍽️ Dining Room</option>
+                                <option value="bathtub">🛁 Bathroom</option>
+                                <option value="work">💼 Home Office</option>
+                                <option value="garage">🚗 Garage</option>
+                                <option value="deck">🏡 Terrace / Deck</option>
+                                <option value="meeting_room">🚪 General Room</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Dynamic Channel & Pin Mapping Section -->
+                <div class="modal-section-group">
+                    <div class="channel-mapping-header">
+                        <label class="modal-section-label">Hardware Relays & Device Channels</label>
+                        <span class="channel-mapping-hint">Map each GPIO pin to a named dashboard device</span>
+                    </div>
+                    <div class="channel-mapping-stack" id="pair-channel-stack">
+                        <!-- Injected dynamically by renderPairingModal() -->
+                    </div>
+                </div>
+
+                <!-- 4. Modal Actions -->
+                <div class="modal-footer pair-modal-footer">
+                    <div class="pair-footer-left">
+                        <button type="button" class="btn-identify-node" id="btn-pair-identify">
+                            <span class="material-symbols-outlined">lightbulb</span> Blink LED
+                        </button>
+                    </div>
+                    <div class="pair-footer-right">
+                        <button type="button" class="modal-cancel-btn" id="pair-modal-cancel-btn">Cancel</button>
+                        <button type="submit" class="modal-submit-btn" id="btn-pair-submit">Save & Deploy to ESP32</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Confirmation Dialogue Modal -->
+    <dialog class="apple-confirm-dialog" id="apple-confirm-dialog" aria-modal="true"
+        aria-labelledby="confirm-dialog-title" aria-describedby="confirm-dialog-desc">
+        <div class="confirm-dialog-card">
+            <div class="confirm-dialog-icon-wrap" id="confirm-dialog-icon-wrap">
+                <span class="material-symbols-outlined" id="confirm-dialog-icon">delete</span>
+            </div>
+            <div class="confirm-dialog-content">
+                <h3 id="confirm-dialog-title">Delete Item?</h3>
+                <p id="confirm-dialog-desc">Are you sure you want to proceed? This action cannot be undone.</p>
+            </div>
+            <div class="confirm-dialog-actions" id="confirm-dialog-actions">
+                <button type="button" class="btn-confirm-cancel" id="btn-confirm-cancel">Cancel</button>
+                <button type="button" class="btn-confirm-proceed" id="btn-confirm-proceed">Delete</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Interactive Avatar Cropper & Position Adjuster Dialog -->
+    <dialog class="device-modal avatar-cropper-modal" id="avatar-cropper-modal" aria-labelledby="cropper-modal-title">
+        <div class="modal-card cropper-modal-card">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <h3 id="cropper-modal-title">Adjust Profile Photo</h3>
+                    <p class="modal-subtitle">Drag to reposition and use the slider to zoom</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="cropper-close-btn" aria-label="Close photo adjuster">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="cropper-body">
+                <!-- Interactive Canvas Stage -->
+                <div class="cropper-canvas-wrapper" id="cropper-canvas-wrapper">
+                    <canvas id="avatar-crop-canvas" width="300" height="300"></canvas>
+                    <div class="cropper-mask-guide" aria-hidden="true">
+                        <div class="cropper-viewfinder"></div>
+                    </div>
+                </div>
+
+                <!-- Zoom Controls -->
+                <div class="cropper-controls-row">
+                    <button type="button" class="crop-tool-btn" id="crop-zoom-out" title="Zoom Out"
+                        aria-label="Zoom Out">
+                        <span class="material-symbols-outlined">zoom_out</span>
+                    </button>
+                    <div class="crop-slider-wrap">
+                        <input type="range" id="crop-zoom-slider" min="1" max="3" step="0.01" value="1"
+                            aria-label="Zoom level">
+                    </div>
+                    <button type="button" class="crop-tool-btn" id="crop-zoom-in" title="Zoom In" aria-label="Zoom In">
+                        <span class="material-symbols-outlined">zoom_in</span>
+                    </button>
+                </div>
+
+                <!-- Rotation & Reset Toolbar -->
+                <div class="cropper-actions-bar">
+                    <button type="button" class="crop-action-pill-btn" id="crop-rotate-btn" title="Rotate 90 degrees">
+                        <span class="material-symbols-outlined">rotate_right</span>
+                        <span>Rotate</span>
+                    </button>
+                    <button type="button" class="crop-action-pill-btn" id="crop-reset-btn"
+                        title="Reset position and zoom">
+                        <span class="material-symbols-outlined">restart_alt</span>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-footer cropper-modal-footer">
+                <button type="button" class="btn-cropper-cancel" id="cropper-cancel-btn">Cancel</button>
+                <button type="button" class="modal-submit-btn btn-cropper-save" id="cropper-save-btn">
+                    <span class="material-symbols-outlined">check</span>
+                    <span>Save Photo</span>
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Add / Edit Home Member Dialog -->
+    <dialog class="device-modal member-modal" id="member-modal" aria-labelledby="member-modal-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-header-text">
+                    <h3 id="member-modal-title">Add Home Member</h3>
+                    <p class="modal-subtitle">Configure identity, access role, PIN, and room permissions</p>
+                </div>
+                <button type="button" class="modal-close-btn" id="member-close-btn" aria-label="Close member modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form id="member-form" class="modal-form">
+                <input type="hidden" id="member-edit-id" value="">
+
+                <div class="form-group">
+                    <label for="member-name-input">Full Name</label>
+                    <input type="text" id="member-name-input" placeholder="e.g., Sarah Parker" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="member-email-input">Email Address</label>
+                    <input type="email" id="member-email-input" placeholder="e.g., sarah@smarthome.local">
+                </div>
+
+                <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="member-role-select">Access Role</label>
+                        <select id="member-role-select">
+                            <option value="family">Family Member</option>
+                            <option value="guest">Guest (Limited)</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="member-pin-input">Access PIN (4-Digits)</label>
+                        <input type="password" id="member-pin-input" placeholder="••••" maxlength="4">
+                    </div>
+                </div>
+
+                <div class="form-group" id="member-rooms-group">
+                    <label>Permitted Room Access</label>
+                    <div class="member-room-checkboxes" id="member-room-checkboxes">
+                        <!-- Populated dynamically from rooms -->
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="modal-cancel-btn" id="member-cancel-btn">Cancel</button>
+                    <button type="submit" class="modal-submit-btn" id="member-submit-btn">Save Member</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Global Hidden File Input for Avatar Upload -->
+    <input type="file" id="avatar-file-input" accept="image/png, image/jpeg, image/webp, image/gif"
+        style="display: none;" aria-hidden="true">
+
+    <!-- Global Apple & Stripe Style Toast Container -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- Modular Frontend Scripts -->
+    <script src="Assets/js/quick-actions.js"></script>
+    <script src="Assets/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,288 @@
+/* ==========================================================================
+   Automations & Scenes Studio Stylesheet
+   ========================================================================== */
+
+.automations-console-card {
+    background-color: var(--color-surface, #ffffff);
+    border-radius: 28px;
+    border: 1.5px solid var(--color-border, #e5e5ea);
+    box-shadow: var(--shadow-card, 0 4px 24px rgba(0, 0, 0, 0.04));
+    padding: 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.automations-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.automations-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.automations-title-wrap h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #1d1d1f);
+    line-height: 1.2;
+}
+
+.automations-title-wrap p {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary, #86868b);
+}
+
+.automations-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Automations Grid Stack */
+.automations-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+
+.automations-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.automations-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 9999px;
+}
+
+.automations-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.15rem;
+}
+
+/* Individual Automation Routine Card */
+.automation-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 1.25rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.15rem;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: -2px -2px 5px 0px inset rgba(0, 0, 0, 0.10),
+                inset 2px 2px 4px 0px rgba(0, 0, 0, 0.04),
+                0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.automation-card:hover {
+    box-shadow: -2px -2px 5px 0px inset rgba(0, 0, 0, 0.14),
+                inset 2px 2px 4px 0px rgba(0, 0, 0, 0.06),
+                0 6px 18px rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
+}
+
+.automation-card.disabled {
+    opacity: 0.65;
+    filter: grayscale(0.2);
+}
+
+/* Card Top Row */
+.auto-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.auto-info-group {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.auto-icon-pill {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #f5f5f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1d1d1f;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+}
+
+.automation-card:hover .auto-icon-pill {
+    background: #000000;
+    color: #ffffff;
+}
+
+.auto-text-details h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1d1d1f);
+    line-height: 1.25;
+}
+
+.auto-text-details p {
+    font-size: 0.825rem;
+    color: var(--color-text-secondary, #86868b);
+    margin-top: 0.2rem;
+    line-height: 1.35;
+}
+
+/* Routine Meta Chips */
+.auto-chips-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.auto-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.3rem 0.65rem;
+    border-radius: 9999px;
+    background: #f5f5f7;
+    color: #4b5563;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.auto-chip .material-symbols-outlined {
+    font-size: 15px;
+}
+
+.auto-chip.chip-target {
+    background: rgba(0, 0, 0, 0.04);
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Card Bottom Action Row */
+.auto-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.btn-run-routine {
+    height: 34px;
+    padding: 0 0.95rem;
+    border-radius: 9999px;
+    background: #000000;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+}
+
+.btn-run-routine:hover {
+    background: #27272a;
+    transform: translateY(-1px);
+}
+
+.btn-run-routine:active {
+    transform: scale(0.96);
+}
+
+.btn-run-routine.running {
+    background: #16a34a;
+    pointer-events: none;
+}
+
+.btn-delete-routine {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.18);
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-delete-routine:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+/* Scoped iOS-style Routine Switch (prevents collision with global .slider) */
+.routine-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.routine-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.routine-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #e5e5ea;
+    transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 9999px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.routine-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ffffff;
+    transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.routine-switch input:checked + .routine-slider {
+    background-color: #000000;
+}
+
+.routine-switch input:checked + .routine-slider:before {
+    transform: translateX(20px);
+}
+

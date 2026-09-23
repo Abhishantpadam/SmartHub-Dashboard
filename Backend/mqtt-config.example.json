@@ -1,0 +1,9 @@
+{
+  "host": "your-broker-instance.s1.eu.hivemq.cloud",
+  "port": 8883,
+  "protocol": "mqtts",
+  "baseTopic": "smarthub",
+  "clientId": "home-dashboard",
+  "username": "your_username",
+  "password": "your_password"
+}

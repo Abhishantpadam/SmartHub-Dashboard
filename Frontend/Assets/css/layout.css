@@ -1,0 +1,448 @@
+/* ==========================================================================
+   Layout & Sidebar Navigation
+   ========================================================================== */
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: var(--font-primary, 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    list-style: none;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--color-bg, #fffbf7);
+    background-size: cover;
+    background-position: center;
+    color: var(--color-text-primary, #1d1d1f);
+}
+
+.body-wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* ==========================================================================
+   Navigation Menu / Sidebar
+   ========================================================================== */
+
+.navigation-menu,
+.dashboard-sidebar {
+    width: 275px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-right: 1px solid var(--color-border, #e5e5ea);
+    height: 100vh;
+    height: 100dvh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+/* Subtle scrollbar for sidebar */
+.navigation-menu::-webkit-scrollbar,
+.dashboard-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.navigation-menu::-webkit-scrollbar-track,
+.dashboard-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.navigation-menu::-webkit-scrollbar-thumb,
+.dashboard-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.navigation-menu::-webkit-scrollbar-thumb:hover,
+.dashboard-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-card,
+.navigation-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 2.25rem 1.4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    box-shadow: none;
+    gap: 1.65rem;
+}
+
+/* Sidebar Brand / Profile Header */
+.sidebar-brand,
+.navigation-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.35rem 0.5rem;
+}
+
+.avatar-upload-wrapper {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1.5px solid #ffffff;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-upload-wrapper:hover {
+    transform: scale(1.06);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+}
+
+.avatar-upload-wrapper:focus-visible {
+    outline: 2px solid #0071e3;
+    outline-offset: 2px;
+}
+
+.brand-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.avatar-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.avatar-upload-wrapper:hover .avatar-hover-overlay {
+    opacity: 1;
+}
+
+.avatar-hover-overlay span {
+    font-size: 1.15rem;
+}
+
+.brand-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.brand-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #1d1d1f);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.brand-status {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.775rem;
+    font-weight: 500;
+    color: var(--color-success, #16a34a);
+}
+
+.brand-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.brand-status.is-offline {
+    color: #ef4444;
+}
+
+.brand-status.is-offline .brand-status-dot {
+    background-color: #ef4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+}
+
+/* Navigation Options */
+.navigation-options {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    padding: 0 0.25rem;
+}
+
+.navigation-options > span {
+    font-size: 0.825rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #86868b;
+    padding-left: 0.5rem;
+    margin-bottom: 0;
+}
+
+.navigation-options > ul {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    list-style: none;
+    gap: 0.85rem;
+}
+
+.navigation-options > ul > li {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 48px;
+    padding: 0 1.25rem;
+    border-radius: 50px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    letter-spacing: -0.01em;
+}
+
+.navigation-options > ul > li i {
+    font-style: normal;
+    font-size: 1.35rem;
+    color: #1d1d1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    flex-shrink: 0;
+    transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Inactive navigation item hover */
+.navigation-options > ul > li:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: #1d1d1f;
+    transform: translateX(2px);
+}
+
+.navigation-options > ul > li:hover i {
+    color: #1d1d1f;
+}
+
+/* Active navigation item */
+.navigation-options > ul > li.active {
+    background-color: #000000;
+    color: #ffffff;
+    font-weight: 500;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    transform: none;
+}
+
+.navigation-options > ul > li.active i {
+    color: #ffffff;
+}
+
+.navigation-options > ul > li.active:hover {
+    background-color: #000000;
+    color: #ffffff;
+    transform: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.navigation-options > ul > li.active:hover i {
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   Navigation Item Entrance / Exit Animations
+   ========================================================================== */
+
+@keyframes navItemAppear {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes navItemDisappear {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Applied via JS before adding .active */
+.nav-item-entering {
+    animation: navItemAppear 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+/* Applied via JS before removing .active */
+.nav-item-exiting {
+    animation: navItemDisappear 0.18s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Logout Button & Signature Hover Animation
+   ========================================================================== */
+
+.logout {
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+.logout .Btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition-duration: 0.3s;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+    background-color: white;
+    outline: none;
+}
+
+.logout .sign {
+    width: 100%;
+    transition-duration: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout .sign i {
+    font-style: normal;
+    font-size: 20px;
+    color: var(--color-text-primary, #1d1d1f);
+    transition-duration: 0.3s;
+}
+
+.logout .text {
+    position: absolute;
+    right: 0%;
+    width: 0%;
+    opacity: 0;
+    color: white;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition-duration: 0.3s;
+}
+
+.logout .Btn:hover {
+    background-color: black;
+    width: 125px;
+    border-radius: 40px;
+    box-shadow: 2px 2px 4px rgba(128, 128, 128, 0.741);
+    transition-duration: 0.3s;
+}
+
+.logout .Btn:hover .sign {
+    width: 30%;
+    transition-duration: 0.3s;
+    padding-left: 10px;
+}
+
+.logout .Btn:hover .sign i {
+    color: white;
+    font-weight: 900;
+}
+
+.logout .Btn:hover .text {
+    opacity: 1;
+    width: 70%;
+    transition-duration: 0.3s;
+    padding-right: 10px;
+}
+
+.logout .Btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.sidebar-footer small {
+    font-size: 0.85rem;
+    color: rgb(125, 125, 125);
+    text-align: center;
+}
+
+/* Main Dashboard Viewport Container */
+.dashboard-view {
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 2.5rem 1.5rem;
+    overflow: hidden;
+}
+
+.content-body {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    margin-top: 1rem;
+    overflow: hidden;
+}

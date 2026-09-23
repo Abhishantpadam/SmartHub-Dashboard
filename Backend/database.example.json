@@ -1,0 +1,83 @@
+{
+  "rooms": [
+    {
+      "id": "bed",
+      "name": "Bed",
+      "icon": "bed"
+    },
+    {
+      "id": "living",
+      "name": "Living",
+      "icon": "chair"
+    },
+    {
+      "id": "common",
+      "name": "Common",
+      "icon": "home"
+    },
+    {
+      "id": "others",
+      "name": "Others",
+      "icon": "more_horiz"
+    }
+  ],
+  "devices": [
+    {
+      "id": "device-bed-4",
+      "name": "Main Light",
+      "room": "bed",
+      "type": "light",
+      "gpio": 4,
+      "on": false,
+      "powerWatts": 0,
+      "dimmable": true,
+      "brightness": 100
+    },
+    {
+      "id": "device-bed-5",
+      "name": "Secondary Light",
+      "room": "bed",
+      "type": "light",
+      "gpio": 5,
+      "on": false,
+      "powerWatts": 0,
+      "dimmable": true,
+      "brightness": 15
+    },
+    {
+      "id": "device-bed-18",
+      "name": "Ceiling Fan",
+      "room": "bed",
+      "type": "fan",
+      "gpio": 18,
+      "on": false,
+      "powerWatts": 0,
+      "dimmable": false,
+      "speed": 1
+    },
+    {
+      "id": "device-bed-19",
+      "name": "Air Conditioner",
+      "room": "bed",
+      "type": "ac",
+      "gpio": 19,
+      "on": false,
+      "powerWatts": 0,
+      "dimmable": false,
+      "temperature": 22,
+      "mode": "cool"
+    },
+    {
+      "id": "device-bed-21",
+      "name": "Power Socket",
+      "room": "bed",
+      "type": "socket",
+      "gpio": 21,
+      "on": false,
+      "powerWatts": 0,
+      "dimmable": false
+    }
+  ],
+  "discoveredNodes": {},
+  "hardwareNodes": {}
+}
