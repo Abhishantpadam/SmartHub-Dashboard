@@ -1094,6 +1094,108 @@ document.addEventListener("DOMContentLoaded", () => {
         dateFullElem.textContent = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     }
 
+    // --------------------------------------------------------------------------
+    // 3b. Open-Meteo Real-Time Weather & Air Quality (AQI) Controller
+    // --------------------------------------------------------------------------
+    let currentWeatherPayload = null;
+
+    const fetchAndRenderWeather = async (forceRefresh = false) => {
+        try {
+            const url = forceRefresh ? "/api/weather?refresh=true" : "/api/weather";
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`Weather fetch failed: ${res.status}`);
+            const data = await res.json();
+            if (!data || !data.success) return;
+
+            currentWeatherPayload = data;
+
+            // 1. Current Temperature & Condition
+            const tempElem = document.getElementById("weather-temp");
+            const feelsElem = document.getElementById("weather-feels-like");
+            const iconElem = document.getElementById("weather-main-icon");
+            const conditionElem = document.getElementById("weather-condition");
+            const locationElem = document.getElementById("weather-location");
+
+            if (tempElem) tempElem.textContent = `${data.current.temp}°C`;
+            if (feelsElem) feelsElem.textContent = `Feels like ${data.current.feelsLike}°`;
+            if (iconElem) iconElem.textContent = data.current.icon || "partly_cloudy_day";
+            if (conditionElem) {
+                conditionElem.innerHTML = `${data.current.condition} &bull; H: ${data.daily.high}° L: ${data.daily.low}°`;
+            }
+            if (locationElem) {
+                locationElem.innerHTML = `<span class="material-symbols-outlined" style="font-size:0.95rem; vertical-align:text-bottom; margin-right:3px;">location_on</span>${data.location.city}`;
+                locationElem.title = `Latitude: ${data.location.latitude.toFixed(2)}°, Longitude: ${data.location.longitude.toFixed(2)}° (Click to change in Settings)`;
+                locationElem.style.cursor = "pointer";
+                locationElem.onclick = () => {
+                    const settingsNavBtn = document.querySelector('li[data-view="settings"]');
+                    if (settingsNavBtn) settingsNavBtn.click();
+                    setTimeout(() => {
+                        const weatherTab = document.querySelector('button.settings-nav-item[data-tab="weather"]');
+                        if (weatherTab) weatherTab.click();
+                    }, 100);
+                };
+            }
+
+            // 2. Atmospheric Micro-Metrics
+            const humElem = document.getElementById("weather-humidity");
+            const windElem = document.getElementById("weather-wind");
+            const uvElem = document.getElementById("weather-uv");
+
+            if (humElem) humElem.textContent = `${data.current.humidity}%`;
+            if (windElem) windElem.textContent = `${data.current.windSpeed} km/h`;
+            if (uvElem) {
+                let uvLabel = "Low";
+                if (data.current.uvIndex >= 8) uvLabel = "Very High";
+                else if (data.current.uvIndex >= 6) uvLabel = "High";
+                else if (data.current.uvIndex >= 3) uvLabel = "Mod";
+                uvElem.textContent = `${data.current.uvIndex} ${uvLabel}`;
+            }
+
+            // 3. Hourly Forecast Strip
+            const hourlyStrip = document.getElementById("weather-hourly-strip");
+            if (hourlyStrip && Array.isArray(data.hourly) && data.hourly.length > 0) {
+                hourlyStrip.innerHTML = data.hourly.map((h) => `
+                    <div class="hourly-item ${h.isNow ? 'is-now' : ''}" title="${h.condition}">
+                        <span class="hourly-time">${h.time}</span>
+                        <span class="material-symbols-outlined hourly-icon">${h.icon}</span>
+                        <span class="hourly-temp">${h.temp}°</span>
+                    </div>
+                `).join("");
+            }
+
+            // 4. Live Air Quality (AQI) in Environment Card
+            const aqiValElem = document.getElementById("room-aqi");
+            const aqiStatusElem = document.getElementById("room-aqi-status");
+            if (aqiValElem && data.airQuality) {
+                aqiValElem.textContent = data.airQuality.aqi;
+                aqiValElem.parentElement.title = `US AQI: ${data.airQuality.aqi} • PM2.5: ${data.airQuality.pm25 ? data.airQuality.pm25 + ' µg/m³' : 'N/A'}`;
+            }
+            if (aqiStatusElem && data.airQuality) {
+                aqiStatusElem.textContent = data.airQuality.label;
+                aqiStatusElem.className = `metric-status ${data.airQuality.statusClass || 'status-good'}`;
+                aqiStatusElem.title = data.airQuality.advice || "";
+            }
+
+            // 5. Contextual Weather Alert Class
+            const weatherBlock = document.querySelector(".weather-block");
+            if (weatherBlock) {
+                const isRainy = [51, 53, 55, 61, 63, 65, 80, 81, 82, 95, 96, 99].includes(data.current.weatherCode);
+                if (isRainy) {
+                    weatherBlock.classList.add("has-rain-alert");
+                } else {
+                    weatherBlock.classList.remove("has-rain-alert");
+                }
+            }
+
+        } catch (err) {
+            console.warn("[Weather] Could not update live dashboard weather:", err);
+        }
+    };
+
+    // Auto-fetch weather on load and every 15 minutes
+    fetchAndRenderWeather();
+    setInterval(() => fetchAndRenderWeather(), 15 * 60 * 1000);
+
     // 4. Update Header Active Device Counter
     const updateActiveCount = () => {
         const activeCountElem = document.getElementById("active-devices-count");
@@ -1631,6 +1733,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 break;
             case "database":
                 renderSettingsDatabase();
+                break;
+            case "weather":
+                renderSettingsWeather();
                 break;
             case "theme":
                 renderSettingsTheme();
@@ -2775,6 +2880,252 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderSettingsTheme();
             });
         });
+    };
+
+    // Sub-Section 8b: Weather & Hyper-Local Location (Open-Meteo Integration)
+    const renderSettingsWeather = () => {
+        const detailPane = document.getElementById("settings-detail-pane");
+        if (!detailPane) return;
+
+        const wCfg = (settingsData && settingsData.weather) || {
+            city: "New Delhi",
+            country: "India",
+            latitude: 28.6139,
+            longitude: 77.2090,
+            autoLocation: true
+        };
+
+        detailPane.innerHTML = `
+            <div class="settings-section-header">
+                <div class="settings-header-left">
+                    <div class="settings-pane-icon">
+                        <span class="material-symbols-outlined">cloud</span>
+                    </div>
+                    <div class="settings-header-titles">
+                        <h2>Weather & Hyper-Local Location</h2>
+                        <p>Real-time Open-Meteo forecasting (ECMWF 9km Grid) and Indian Air Quality (AQI) tracking</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card" style="margin-bottom: 1.5rem;">
+                <div class="settings-card-header">
+                    <div>
+                        <h3>Active Dashboard Location</h3>
+                        <p>Used to calculate hyper-local weather, sunrise/sunset, and outdoor air particulates</p>
+                    </div>
+                    <button type="button" class="btn-primary" id="btn-detect-gps" style="display:flex; align-items:center; gap:0.5rem; padding: 0.6rem 1.1rem; border-radius: 12px;">
+                        <span class="material-symbols-outlined" style="font-size:1.1rem;">my_location</span>
+                        <span>Detect GPS Location</span>
+                    </button>
+                </div>
+
+                <div class="weather-active-preview" style="display:flex; align-items:center; justify-content:space-between; padding:1.25rem; background:rgba(255,255,255,0.03); border:1px solid var(--color-border); border-radius:16px; margin-top:1rem;">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:48px; height:48px; border-radius:14px; background:rgba(16,185,129,0.12); display:flex; align-items:center; justify-content:center; color:#10b981;">
+                            <span class="material-symbols-outlined" style="font-size:1.75rem;">location_on</span>
+                        </div>
+                        <div>
+                            <h4 style="margin:0; font-size:1.1rem; font-weight:700;" id="preview-weather-city">${wCfg.city || "New Delhi"}, ${wCfg.country || "India"}</h4>
+                            <p style="margin:0.25rem 0 0; font-size:0.82rem; color:var(--color-text-secondary);" id="preview-weather-coords">
+                                Coordinates: ${Number(wCfg.latitude).toFixed(4)}°N, ${Number(wCfg.longitude).toFixed(4)}°E
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="badge-status status-online" style="display:inline-flex; align-items:center; gap:0.35rem; padding:0.25rem 0.65rem; border-radius:20px; font-size:0.75rem; font-weight:600; background:rgba(48,209,88,0.12); color:#30d158;">
+                            <span class="status-dot"></span> Open-Meteo Active
+                        </span>
+                        <p style="margin:0.25rem 0 0; font-size:0.75rem; color:var(--color-text-secondary);">15-min cached sync</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <div>
+                        <h3>Change Location or Search City</h3>
+                        <p>Search any Indian city, pin code, or custom geographic coordinates</p>
+                    </div>
+                </div>
+
+                <div class="form-group" style="position:relative; margin-top:1rem;">
+                    <label for="weather-search-input">Search Indian or Global City</label>
+                    <div style="position:relative;">
+                        <input type="text" id="weather-search-input" placeholder="e.g. Noida, Indiranagar Bangalore, South Delhi, Mumbai, Pune..." autocomplete="off" style="padding-left:2.5rem; width:100%; box-sizing:border-box;">
+                        <span class="material-symbols-outlined" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); font-size:1.2rem; color:var(--color-text-secondary); pointer-events:none;">search</span>
+                    </div>
+                    <div id="weather-search-results" class="search-autocomplete-dropdown" style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--color-surface, #ffffff); border:1px solid var(--color-border); border-radius:12px; box-shadow:0 12px 32px rgba(0,0,0,0.15); z-index:100; max-height:220px; overflow-y:auto; margin-top:0.35rem;"></div>
+                </div>
+
+                <form id="weather-config-form" style="margin-top:1.25rem;">
+                    <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                        <div class="form-group">
+                            <label for="weather-lat-input">Latitude (°N)</label>
+                            <input type="number" step="0.0001" id="weather-lat-input" value="${wCfg.latitude}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weather-lon-input">Longitude (°E)</label>
+                            <input type="number" step="0.0001" id="weather-lon-input" value="${wCfg.longitude}" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:0.75rem;">
+                        <label for="weather-city-input">Display City Name</label>
+                        <input type="text" id="weather-city-input" value="${wCfg.city || ''}" placeholder="e.g. Noida, Sector 62" required>
+                    </div>
+
+                    <div style="margin-top:1.5rem; display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn-primary" id="btn-save-weather" style="padding:0.75rem 1.5rem; border-radius:12px;">
+                            Save & Sync Weather
+                        </button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        // Attach event listeners for Geolocation, Autocomplete search, and Form submit
+        const detectBtn = document.getElementById("btn-detect-gps");
+        const searchInput = document.getElementById("weather-search-input");
+        const searchResults = document.getElementById("weather-search-results");
+        const latInput = document.getElementById("weather-lat-input");
+        const lonInput = document.getElementById("weather-lon-input");
+        const cityInput = document.getElementById("weather-city-input");
+        const form = document.getElementById("weather-config-form");
+
+        if (detectBtn) {
+            detectBtn.addEventListener("click", () => {
+                if (!navigator.geolocation) {
+                    showToast("Geolocation is not supported by your browser.", "error", true);
+                    return;
+                }
+                detectBtn.disabled = true;
+                detectBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1rem; animation: spin 1s linear infinite;">sync</span><span>Detecting GPS...</span>`;
+
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        detectBtn.disabled = false;
+                        detectBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1rem;">my_location</span><span>Detect GPS Location</span>`;
+
+                        const lat = pos.coords.latitude;
+                        const lon = pos.coords.longitude;
+                        latInput.value = lat.toFixed(4);
+                        lonInput.value = lon.toFixed(4);
+                        cityInput.value = "My Home Coordinates";
+                        showToast(`GPS Location detected: ${lat.toFixed(2)}°, ${lon.toFixed(2)}°`, "my_location");
+                    },
+                    (err) => {
+                        detectBtn.disabled = false;
+                        detectBtn.innerHTML = `<span class="material-symbols-outlined" style="font-size:1.1rem;">my_location</span><span>Detect GPS Location</span>`;
+                        showToast("Could not retrieve GPS: " + err.message, "error", true);
+                    },
+                    { timeout: 8000, enableHighAccuracy: true }
+                );
+            });
+        }
+
+        // Live city search autocomplete
+        let debounceTimer;
+        if (searchInput && searchResults) {
+            searchInput.addEventListener("input", () => {
+                clearTimeout(debounceTimer);
+                const q = searchInput.value.trim();
+                if (q.length < 2) {
+                    searchResults.style.display = "none";
+                    searchResults.innerHTML = "";
+                    return;
+                }
+                debounceTimer = setTimeout(async () => {
+                    try {
+                        const r = await fetch(`/api/weather/search?query=${encodeURIComponent(q)}`);
+                        if (!r.ok) return;
+                        const resJson = await r.json();
+                        const list = resJson.results || [];
+                        if (list.length === 0) {
+                            searchResults.innerHTML = `<div style="padding:0.75rem 1rem; font-size:0.85rem; color:var(--color-text-secondary);">No cities found for "${q}"</div>`;
+                            searchResults.style.display = "block";
+                            return;
+                        }
+                        searchResults.innerHTML = list.map(item => `
+                            <div class="search-result-item" data-lat="${item.latitude}" data-lon="${item.longitude}" data-name="${item.name}" data-country="${item.country}" data-admin="${item.admin}" style="padding:0.65rem 1rem; border-bottom:1px solid var(--color-border); cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <strong style="display:block; font-size:0.9rem;">${item.name}</strong>
+                                    <span style="font-size:0.78rem; color:var(--color-text-secondary);">${item.admin ? item.admin + ', ' : ''}${item.country}</span>
+                                </div>
+                                <span style="font-size:0.75rem; color:var(--color-text-secondary);">${item.latitude.toFixed(2)}°, ${item.longitude.toFixed(2)}°</span>
+                            </div>
+                        `).join("");
+                        searchResults.style.display = "block";
+
+                        searchResults.querySelectorAll(".search-result-item").forEach(itemEl => {
+                            itemEl.addEventListener("click", () => {
+                                const lat = parseFloat(itemEl.dataset.lat);
+                                const lon = parseFloat(itemEl.dataset.lon);
+                                const name = itemEl.dataset.name;
+                                const country = itemEl.dataset.country;
+                                latInput.value = lat.toFixed(4);
+                                lonInput.value = lon.toFixed(4);
+                                cityInput.value = name;
+                                searchInput.value = `${name}, ${country}`;
+                                searchResults.style.display = "none";
+                            });
+                        });
+                    } catch (e) {
+                        console.error("City search failed:", e);
+                    }
+                }, 250);
+            });
+
+            document.addEventListener("click", (evt) => {
+                if (!searchInput.contains(evt.target) && !searchResults.contains(evt.target)) {
+                    searchResults.style.display = "none";
+                }
+            });
+        }
+
+        // Form Submit
+        if (form) {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const lat = parseFloat(latInput.value);
+                const lon = parseFloat(lonInput.value);
+                const city = cityInput.value.trim() || "My Location";
+
+                const newWeatherConfig = {
+                    city,
+                    country: "India",
+                    latitude: lat,
+                    longitude: lon,
+                    autoLocation: false
+                };
+
+                try {
+                    const saveBtn = document.getElementById("btn-save-weather");
+                    if (saveBtn) {
+                        saveBtn.disabled = true;
+                        saveBtn.textContent = "Saving...";
+                    }
+                    const r = await fetch("/api/settings", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ section: "weather", data: newWeatherConfig })
+                    });
+                    if (saveBtn) {
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = "Save & Sync Weather";
+                    }
+                    if (r.ok) {
+                        if (settingsData) settingsData.weather = newWeatherConfig;
+                        showToast(`Location updated to ${city}!`, "cloud");
+                        renderSettingsWeather();
+                        fetchAndRenderWeather(true); // force fresh weather fetch
+                    } else {
+                        showToast("Failed to save location settings.", "error", true);
+                    }
+                } catch (err) {
+                    showToast("Error saving location: " + err.message, "error", true);
+                }
+            });
+        }
     };
 
     // Sub-Section 9: Security & Account (Home Members & Access Control Hub)

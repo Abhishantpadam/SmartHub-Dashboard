@@ -79,7 +79,8 @@ function loadDatabase() {
                     { id: "device-7", name: "Inverter AC", room: "bed", type: "ac", on: false, powerWatts: 0, temperature: 22, mode: "cool" }
                 ],
                 discoveredNodes: parsed.discoveredNodes || {},
-                hardwareNodes: parsed.hardwareNodes || {}
+                hardwareNodes: parsed.hardwareNodes || {},
+                weatherSettings: parsed.weatherSettings || null
             };
         }
     } catch (e) {
@@ -122,7 +123,8 @@ function saveDatabase() {
         rooms,
         devices,
         discoveredNodes,
-        hardwareNodes
+        hardwareNodes,
+        weatherSettings: (typeof settingsState !== "undefined" && settingsState.weather) ? settingsState.weather : null
     });
 }
 
@@ -131,6 +133,7 @@ let rooms = dbState.rooms;
 let devices = dbState.devices;
 let hardwareNodes = dbState.hardwareNodes || {};
 let discoveredNodes = dbState.discoveredNodes || {};
+let initialWeatherSettings = dbState.weatherSettings || null;
 
 // MQTT Diagnostics & Telemetry Tracker
 let mqttStats = {
@@ -1677,6 +1680,14 @@ let settingsState = {
         accentColor: "#10b981",
         hapticClicks: true
     },
+    weather: initialWeatherSettings || {
+        city: "New Delhi",
+        region: "Delhi",
+        country: "India",
+        latitude: 28.6139,
+        longitude: 77.2090,
+        autoLocation: true
+    },
     database: {
         engine: "Embedded In-Memory / JSON",
         sizeKb: 1420,
@@ -1759,6 +1770,12 @@ app.post("/api/settings", (req, res) => {
             console.log("[MQTT] Credentials updated. Reconnecting...");
         }
 
+        // Weather section: invalidate cache to fetch fresh coordinates immediately
+        if (section === "weather" && data) {
+            weatherCache.timestamp = 0;
+            saveDatabase();
+        }
+
         addLog("system", "Settings Updated", `Config section "${section}" saved.`, "settings");
         return res.json({ success: true, settings: settingsState });
     }
@@ -1818,6 +1835,235 @@ app.post("/api/settings/mqtt/test", (req, res) => {
     } catch (e) {
         clearTimeout(bail);
         res.json({ success: false, error: e.message });
+    }
+});
+
+// ==========================================================================
+// Weather & Air Quality (AQI) — Open-Meteo Integration
+// ==========================================================================
+let weatherCache = {
+    key: "",
+    timestamp: 0,
+    data: null
+};
+const WEATHER_CACHE_TTL = 15 * 60 * 1000; // 15-minute in-memory cache
+
+function getWmoWeatherInfo(code, isDay = 1) {
+    switch (code) {
+        case 0:
+            return { label: isDay ? "Clear Sky" : "Clear Night", icon: isDay ? "wb_sunny" : "clear_night" };
+        case 1:
+            return { label: isDay ? "Mainly Clear" : "Clear Night", icon: isDay ? "wb_sunny" : "bedtime" };
+        case 2:
+            return { label: "Partly Cloudy", icon: isDay ? "partly_cloudy_day" : "partly_cloudy_night" };
+        case 3:
+            return { label: "Overcast", icon: "cloud" };
+        case 45:
+        case 48:
+            return { label: "Foggy", icon: "foggy" };
+        case 51:
+        case 53:
+        case 55:
+            return { label: "Drizzle", icon: "rainy_light" };
+        case 56:
+        case 57:
+            return { label: "Freezing Drizzle", icon: "weather_mix" };
+        case 61:
+            return { label: "Light Rain", icon: "rainy_light" };
+        case 63:
+            return { label: "Moderate Rain", icon: "rainy" };
+        case 65:
+            return { label: "Heavy Rain", icon: "rainy_heavy" };
+        case 66:
+        case 67:
+            return { label: "Freezing Rain", icon: "weather_mix" };
+        case 71:
+        case 73:
+        case 75:
+            return { label: "Snow", icon: "ac_unit" };
+        case 77:
+            return { label: "Snow Grains", icon: "ac_unit" };
+        case 80:
+        case 81:
+        case 82:
+            return { label: "Rain Showers", icon: "rainy" };
+        case 85:
+        case 86:
+            return { label: "Snow Showers", icon: "ac_unit" };
+        case 95:
+            return { label: "Thunderstorm", icon: "thunderstorm" };
+        case 96:
+        case 99:
+            return { label: "Severe Thunderstorm", icon: "thunderstorm" };
+        default:
+            return { label: "Fair", icon: isDay ? "wb_sunny" : "bedtime" };
+    }
+}
+
+function getAqiCategory(usAqi, pm25 = null) {
+    const val = Number(usAqi) || 0;
+    if (val <= 50) {
+        return { label: "Good", statusClass: "status-excellent", advice: "Air quality is ideal for outdoor activities." };
+    } else if (val <= 100) {
+        return { label: "Moderate", statusClass: "status-good", advice: "Air quality is acceptable." };
+    } else if (val <= 150) {
+        return { label: "Moderate/Sensitive", statusClass: "status-warn", advice: "Sensitive groups should reduce outdoor exertion." };
+    } else if (val <= 200) {
+        return { label: "Unhealthy", statusClass: "status-danger", advice: "High particulates. Keep windows closed." };
+    } else if (val <= 300) {
+        return { label: "Very Unhealthy", statusClass: "status-danger", advice: "Health alert: Avoid outdoor physical activity." };
+    } else {
+        return { label: "Hazardous", statusClass: "status-severe", advice: "Emergency conditions. Turn on air purifiers." };
+    }
+}
+
+app.get("/api/weather", async (req, res) => {
+    try {
+        const lat = parseFloat(req.query.lat) || (settingsState.weather && settingsState.weather.latitude) || 28.6139;
+        const lon = parseFloat(req.query.lon) || (settingsState.weather && settingsState.weather.longitude) || 77.2090;
+        const cityName = req.query.city || (settingsState.weather && settingsState.weather.city) || "New Delhi";
+
+        const cacheKey = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+        const now = Date.now();
+
+        if (weatherCache.data && weatherCache.key === cacheKey && (now - weatherCache.timestamp) < WEATHER_CACHE_TTL) {
+            return res.json({ ...weatherCache.data, cached: true });
+        }
+
+        const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,uv_index&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=2`;
+        const aqiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=european_aqi,us_aqi,pm10,pm2_5`;
+
+        const [forecastRes, aqiRes] = await Promise.all([
+            fetch(forecastUrl),
+            fetch(aqiUrl).catch(() => null)
+        ]);
+
+        if (!forecastRes.ok) {
+            throw new Error(`Open-Meteo returned status ${forecastRes.status}`);
+        }
+
+        const fData = await forecastRes.json();
+        const aData = aqiRes && aqiRes.ok ? await aqiRes.json() : null;
+
+        const currentWmo = getWmoWeatherInfo(fData.current.weather_code, fData.current.is_day);
+
+        // Process 4 upcoming hourly forecast slots
+        const hourlyList = [];
+        if (fData.hourly && Array.isArray(fData.hourly.time)) {
+            const currentIso = fData.current.time;
+            let startIndex = fData.hourly.time.findIndex(t => t >= currentIso);
+            if (startIndex === -1) startIndex = 0;
+
+            const stepIndices = [startIndex, startIndex + 3, startIndex + 6, startIndex + 9];
+            stepIndices.forEach((idx, stepNum) => {
+                if (idx < fData.hourly.time.length) {
+                    const tStr = fData.hourly.time[idx];
+                    const temp = Math.round(fData.hourly.temperature_2m[idx]);
+                    const code = fData.hourly.weather_code[idx];
+                    const dateObj = new Date(tStr);
+                    const isDay = (dateObj.getHours() >= 6 && dateObj.getHours() < 19) ? 1 : 0;
+                    const wInfo = getWmoWeatherInfo(code, isDay);
+
+                    let timeLabel = "Now";
+                    if (stepNum > 0) {
+                        let hours = dateObj.getHours();
+                        const ampm = hours >= 12 ? "PM" : "AM";
+                        hours = hours % 12 || 12;
+                        timeLabel = `${hours} ${ampm}`;
+                    }
+
+                    hourlyList.push({
+                        time: timeLabel,
+                        rawTime: tStr,
+                        temp,
+                        icon: wInfo.icon,
+                        condition: wInfo.label,
+                        isNow: stepNum === 0
+                    });
+                }
+            });
+        }
+
+        const usAqi = aData && aData.current ? Math.round(aData.current.us_aqi) : 45;
+        const pm25 = aData && aData.current ? aData.current.pm2_5 : null;
+        const pm10 = aData && aData.current ? aData.current.pm10 : null;
+        const aqiCategory = getAqiCategory(usAqi, pm25);
+
+        const payload = {
+            success: true,
+            location: {
+                city: cityName,
+                latitude: lat,
+                longitude: lon
+            },
+            current: {
+                temp: Math.round(fData.current.temperature_2m),
+                feelsLike: Math.round(fData.current.apparent_temperature),
+                humidity: Math.round(fData.current.relative_humidity_2m),
+                windSpeed: Math.round(fData.current.wind_speed_10m),
+                uvIndex: Math.round(fData.current.uv_index || 0),
+                isDay: fData.current.is_day === 1,
+                weatherCode: fData.current.weather_code,
+                condition: currentWmo.label,
+                icon: currentWmo.icon,
+                precipitation: fData.current.precipitation || 0
+            },
+            daily: {
+                high: Math.round(fData.daily.temperature_2m_max[0]),
+                low: Math.round(fData.daily.temperature_2m_min[0]),
+                sunrise: fData.daily.sunrise[0],
+                sunset: fData.daily.sunset[0]
+            },
+            hourly: hourlyList,
+            airQuality: {
+                aqi: usAqi,
+                pm25,
+                pm10,
+                label: aqiCategory.label,
+                statusClass: aqiCategory.statusClass,
+                advice: aqiCategory.advice
+            },
+            updatedAt: new Date().toISOString()
+        };
+
+        weatherCache = {
+            key: cacheKey,
+            timestamp: now,
+            data: payload
+        };
+
+        res.json(payload);
+    } catch (err) {
+        console.error("[Weather] Failed to fetch live weather:", err.message);
+        if (weatherCache.data) {
+            return res.json({ ...weatherCache.data, cached: true, warning: "Offline fallback" });
+        }
+        res.status(500).json({ error: "Failed to fetch live weather: " + err.message });
+    }
+});
+
+app.get("/api/weather/search", async (req, res) => {
+    try {
+        const query = (req.query.query || "").trim();
+        if (!query || query.length < 2) {
+            return res.json({ results: [] });
+        }
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`;
+        const r = await fetch(geoUrl);
+        if (!r.ok) throw new Error("Geocoding failed");
+        const json = await r.json();
+        const results = (json.results || []).map(item => ({
+            id: item.id,
+            name: item.name,
+            admin: item.admin1 || item.admin2 || "",
+            country: item.country || "",
+            latitude: item.latitude,
+            longitude: item.longitude
+        }));
+        res.json({ results });
+    } catch (err) {
+        console.error("[Weather Geocoding] Search error:", err.message);
+        res.status(500).json({ error: err.message, results: [] });
     }
 });
 

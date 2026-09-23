@@ -20,6 +20,9 @@ Backend/members.json
 Backend/uploads/
 Backend/database.json
 
+# Antigravity agent configuration and workspace skills
+.agents/
+
 # Ignore reference projects
 WanderLust/
 wanderlust/

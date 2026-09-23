@@ -170,15 +170,15 @@
                                     <div class="weather-badge-group">
                                         <div class="weather-pill-badge">
                                             <span
-                                                class="material-symbols-outlined weather-icon">partly_cloudy_day</span>
-                                            <span class="weather-temp">27°C</span>
+                                                class="material-symbols-outlined weather-icon" id="weather-main-icon">partly_cloudy_day</span>
+                                            <span class="weather-temp" id="weather-temp">--°C</span>
                                         </div>
-                                        <span class="weather-feels-like">Feels like 29°</span>
+                                        <span class="weather-feels-like" id="weather-feels-like">Feels like --°</span>
                                     </div>
                                 </div>
                                 <div class="weather-bottom-row">
-                                    <span class="weather-condition">Partly Cloudy &bull; H: 30° L: 21°</span>
-                                    <span class="weather-location">Home City</span>
+                                    <span class="weather-condition" id="weather-condition">Loading local forecast...</span>
+                                    <span class="weather-location" id="weather-location">Detecting Location...</span>
                                 </div>
                                 <!-- Atmospheric Micro-Metrics Strip -->
                                 <div class="weather-metrics-strip">
@@ -187,7 +187,7 @@
                                             class="material-symbols-outlined submetric-icon">humidity_percentage</span>
                                         <div class="submetric-text">
                                             <span class="submetric-label">Humidity</span>
-                                            <span class="submetric-val">54%</span>
+                                            <span class="submetric-val" id="weather-humidity">--%</span>
                                         </div>
                                     </div>
                                     <div class="submetric-divider" aria-hidden="true"></div>
@@ -195,7 +195,7 @@
                                         <span class="material-symbols-outlined submetric-icon">air</span>
                                         <div class="submetric-text">
                                             <span class="submetric-label">Wind</span>
-                                            <span class="submetric-val">14 km/h</span>
+                                            <span class="submetric-val" id="weather-wind">-- km/h</span>
                                         </div>
                                     </div>
                                     <div class="submetric-divider" aria-hidden="true"></div>
@@ -203,32 +203,13 @@
                                         <span class="material-symbols-outlined submetric-icon">wb_sunny</span>
                                         <div class="submetric-text">
                                             <span class="submetric-label">UV Index</span>
-                                            <span class="submetric-val">3 Mod</span>
+                                            <span class="submetric-val" id="weather-uv">--</span>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Hourly Micro Forecast Strip -->
                                 <div class="weather-hourly-strip" id="weather-hourly-strip">
-                                    <div class="hourly-item is-now">
-                                        <span class="hourly-time">Now</span>
-                                        <span class="material-symbols-outlined hourly-icon">partly_cloudy_day</span>
-                                        <span class="hourly-temp">27°</span>
-                                    </div>
-                                    <div class="hourly-item">
-                                        <span class="hourly-time">3 PM</span>
-                                        <span class="material-symbols-outlined hourly-icon">wb_sunny</span>
-                                        <span class="hourly-temp">29°</span>
-                                    </div>
-                                    <div class="hourly-item">
-                                        <span class="hourly-time">6 PM</span>
-                                        <span class="material-symbols-outlined hourly-icon">sunny_snowing</span>
-                                        <span class="hourly-temp">26°</span>
-                                    </div>
-                                    <div class="hourly-item">
-                                        <span class="hourly-time">9 PM</span>
-                                        <span class="material-symbols-outlined hourly-icon">bedtime</span>
-                                        <span class="hourly-temp">22°</span>
-                                    </div>
+                                    <!-- Injected dynamically by main.js -->
                                 </div>
                             </div>
 
@@ -379,6 +360,11 @@
                                 </button>
 
                                 <span class="settings-nav-heading">Personalization</span>
+                                <button type="button" class="settings-nav-item" data-tab="weather" role="tab"
+                                    aria-selected="false">
+                                    <span class="material-symbols-outlined nav-icon">cloud</span>
+                                    <span class="nav-label">Weather & Location</span>
+                                </button>
                                 <button type="button" class="settings-nav-item" data-tab="theme" role="tab"
                                     aria-selected="false">
                                     <span class="material-symbols-outlined nav-icon">palette</span>
